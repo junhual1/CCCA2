@@ -1,0 +1,27 @@
+---
+- name: Print current path from root
+  command: pwd -P
+
+- name: Create directory
+  file:
+    path: /home/ubuntu/docker
+    state: directory
+
+- name: Copy a masto image
+  copy:
+    src:  /home/junhual1/ccc/ass2/ansible/images/masto.tar
+    dest: /home/ubuntu/docker/masto.tar
+    remote_src: false
+    
+
+- name: Load Docker image from file
+  docker_image:
+    name: masto
+    load_path: /home/ubuntu/docker/masto.tar
+
+- name: Run mastodown Docker container
+  docker_container:
+    name: masto_h
+    image: myimage
+    state: started
+    detach: yes
