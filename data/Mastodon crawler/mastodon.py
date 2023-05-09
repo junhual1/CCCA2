@@ -1,11 +1,3 @@
-# from mastodon import Mastodon
-# import os
-
-
-# mastodon = Mastodon(api_base_url='https://mastodon.au', access_token = 'sR7_FjfeylT2c7wqJKwPep6g3izM_E9sQyqf58x-ezE')
-# mastodon.retrieve_mastodon_version()
-# print(mastodon.status('110224847455353234')['created_at'])
-
 from mastodon import Mastodon, MastodonNotFoundError, MastodonRatelimitError, StreamListener
 import csv, os, time, json,datetime,couchdb,re
 
@@ -14,23 +6,33 @@ m = Mastodon(
         access_token='3pNPEKMUu8fkt6knKW_Mc0NKqdpKLoOKwa0hiWaZhWk'
     )
 
-user = 'yinxy1'
-psw = 'Yxy0112*'
+import couchdb
+
+user = 'admin'
+psw = 'qazwsxedc'
+node_ip = '172.26.129.182'
 # connect to the CouchDB server
-server = couchdb.Server('http://yinxy1:Yxy0112*@127.0.0.1:5984/')
+server = couchdb.Server(f'http://{user}:{psw}@{node_ip}:5984')
 
-# select the database
-db = server['mastodon']
+cnt = {'count':0}
 
-a_toot = {}
+import uuid
+
 class Listener(StreamListener):
     def on_update(self, status):
-        # account_id = status['account']['id']
-        a_toot["toot_id"] = status['id']
+        a_toot = {}
+        count = cnt['count']
+        if count%2000000 == 0:
+            db = server.create(f'mastodon{count//2000000}')
+        else: 
+            db = server[f'mastodon{count//2000000}']
         a_toot["content"] = status['content']
-        # .apply(lambda x: x.encode("ascii", "ignore").decode("utf-8"))
         a_toot["time"] = status['created_at'].date().strftime("%Y-%m-%d")
+        a_toot['toot_id']=str(status['id'])
+        print('save', a_toot)
         db.save(a_toot)
+        cnt['count'] += 1
+
 
 m.stream_public(Listener())
 
