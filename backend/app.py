@@ -23,27 +23,52 @@ def root():
 
 
 
-@app.route('/api_0/<param>')
-def api_0(param):
-    view = db.view('agism/new-view', startkey=[param], endkey=[param, {}])
-    doc = list(view)
-    doc_value = doc[0]["value"]
-    result = {"city": param,'total': doc_value['total'], 'mentioned': doc_value['mentioned']}
-    return result
-
-@app.route('/api_11/<state>')
-def api_11(state):
-    view = db.view('agism/new-view', startkey=[state.lower()], endkey=[state.lower() + "\ufff0"])
+@app.route('/api_0/<state>')
+def api_0(state):
+    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
-    for doc in view:
-        city_data = doc['value']
+    for row in view:
+        result = {"city": row['key'][1],'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['percentage']}
+        results.append(result)
+    return {"results": results}
+
+@app.route('/api_00/<state>')
+def api_00(state):
+    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
+    results = []
+    total_sum = 0
+    mentioned_sum = 0
+    for row in view:
         result = {
-            'city': doc['key'][0],
-            'mentioned': city_data['mentioned'],
-            'total': city_data['total']
+            "city": row['key'][1],
+            'total': row['value']['total'],
+            'mentioned': row['value']['mentioned'],
+            'percentage': row['value']['percentage']
+        }
+        total_sum += row['value']['total']
+        mentioned_sum += row['value']['mentioned']
+        results.append(result)
+    summary = {
+        "total_sum": total_sum,
+        "mentioned_sum": mentioned_sum,
+        "percentage_avg": mentioned_sum / total_sum
+    }
+    return {"summary": summary}
+
+@app.route('/api_000/<state>/<city>')
+def api_000(state, city):
+    view = db.view('agism/new-view', startkey=[state,city], endkey=[state,city,{}],group_level = 3)
+    results = []
+    for row in view:
+        result = {
+            "city": row['key'][1],
+            'total': row['value']['total'],
+            'mentioned': row['value']['mentioned'],
+            'percentage': row['value']['percentage']
         }
         results.append(result)
-    return {'results': results}
+    return {"results": results}
+
 
 @app.route('/api_1/<param>')
 def api_1(param):
