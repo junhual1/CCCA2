@@ -12,7 +12,7 @@
 
 - hosts: COMP90024
   vars_files:
-    - host_vars/wordpress.yaml
+    - host_vars/docker.yaml
   gather_facts: true
   
   vars:
@@ -22,5 +22,6 @@
 
   roles:
     - role: wp-common
-    - role: wp-volumes
-    - role: wp-docker
+    - role: docker-volumes
+    - role: docker-install
+    - role: docker-mastodon
