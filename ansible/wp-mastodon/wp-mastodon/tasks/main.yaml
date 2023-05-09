@@ -1,0 +1,19 @@
+---
+- name: Download Mastodon.py WHL file
+  get_url:
+    url: "https://files.pythonhosted.org/packages/aa/6a/63e85c888d8ad3980d91e4b9a06b3d3ec0a97b631f0af37d7c78cd00d900/Mastodon.py-1.8.1-py2.py3-none-any.whl"
+    dest: "Mastodon.py-1.8.1-py2.py3-none-any.whl"
+
+- name: Unzip Mastodon.py WHL file
+  ansible.builtin.shell:
+  curl unzip Mastodon.py-1.8.1-py2.py3-none-any.whl
+
+- name: Copy Mastodon.py to remote server
+  copy:
+    src: "/path/to/local/Mastodon.py"
+    dest: "/path/to/remote/Mastodon.py"
+    mode: "0644"
+
+- name: Run Mastodon.py
+  ansible.builtin.shell:
+  curl Mastodon.py-1.8.1 && python mastodon.py
