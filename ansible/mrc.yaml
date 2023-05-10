@@ -21,7 +21,11 @@
   - ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
   roles:
-    - role: wp-common
+    - role: docker-common
     - role: docker-volumes
     - role: docker-install
     - role: docker-mastodon
+
+
+
+

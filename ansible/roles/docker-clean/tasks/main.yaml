@@ -1,0 +1,9 @@
+---
+- name: stop running image
+  command: "sudo docker stop masto_h"
+
+- name: remove container
+  command: "sudo docker rm masto_h"
+
+- name: remove image
+  command: "sudo docker rmi masto"
