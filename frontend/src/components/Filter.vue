@@ -6,26 +6,26 @@
     <div class="filterSelect">
         <span class="filterScenario">Scenario: </span>
         <select v-model="select1">
-            <option value="scenario1">scenario1</option>
-            <option value="scenario2">scenario2</option>
-            <option value="scenario3">scenario3</option>
+            <option value="Unemployment">Unemployment</option>
+            <option value="Agism">Agism</option>
+            <option value="Sexism">Sexism</option>
         </select>
     </div>
     <div class="feature">
-        <div class="feature1">
+        <!-- <div class="feature1">
             <span>Feature 1: </span>
             <select v-model="select2">
                 <option value="feature1">feature1</option>
                 <option value="feature2">feature2</option>
                 <option value="feature3">feature3</option>
             </select>
-        </div>
+        </div> -->
         <div class="feature2">
-            <span>Feature 2: </span>
+            <span>State: </span>
             <select v-model="select3">
-                <option value="feature1">feature1</option>
-                <option value="feature2">feature2</option>
-                <option value="feature3">feature3</option>
+                <option value="VIC">VIC</option>
+                <option value="NSW">NSW</option>
+                <option value="QLD">QLD</option>
             </select>
         </div>
     </div>
@@ -43,19 +43,17 @@ export default {
     data() {
         return {
             select1: null,
-            select2: null,
+            // select2: null,
             select3: null
         }
     },
     methods: {
-        // search() {
-        //     const query = {
-        //         select1: this.select1,
-        //         select2: this.select2,
-        //         select3: this.select3
-        //     }
-        //     this.$router.push({ name: 'results', query: query })
-        // }
+        search() {
+            const scenario = this.select1
+            // const feature = this.select2
+            const state = this.select3
+            this.$router.push({ name: 'results', params: { scenario: scenario, state: state } })
+        }
     }
 }
 </script>

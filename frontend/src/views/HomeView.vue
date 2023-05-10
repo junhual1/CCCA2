@@ -1,46 +1,52 @@
 <template>
-  <div class="home">
-    <h1>Home Page</h1>
-  </div>
   <div>
-    <div class="select">
-      <span class="scenario">Scenario: </span>
-      <select>
-        <option value="scenario1">scenario1</option>
-        <option value="scenario2">scenario2</option>
-        <option value="scenario3">scenario3</option>
-      </select>
+    <div class="home">
+      <h1>Home Page</h1>
     </div>
-    <button @click="showFilter" class="compare">
-      <div class="comparison">
-        <div class="lines">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-        <span class="right">Filter</span>
+    <div>
+      <!-- <div class="select">
+        <span class="scenario">Scenario: </span>
+        <select>
+          <option value="scenario1">scenario1</option>
+          <option value="scenario2">scenario2</option>
+          <option value="scenario3">scenario3</option>
+        </select>
+      </div> -->
+      <div class="listScenario">
+        <Test />
+      <!-- <Map /> -->
       </div>
-    </button>
-  </div>
-  
-  <div v-if="isPlaying" class="filter">
-    <Filter />
-    <div class="overlay" @click.self="closeFilter">
+      <button @click="showFilter" class="compare">
+        <div class="comparison">
+          <div class="lines">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <span class="right">Filter</span>
+        </div>
+      </button>
     </div>
+    
+    <div v-if="isPlaying" class="filter">
+      <Filter />
+      <div class="overlay" @click.self="closeFilter">
+      </div>
+    </div>
+
+
   </div>
-  <div>
-    <Map />
-  </div>
-  
+
 </template>
 
 <script>
 import Filter from '../components/Filter.vue'
 import Map from '../components/Map.vue'
+import Test from '../components/test.vue'
 
 export default {
   name: 'HomeView',
-  components: { Filter, Map },
+  components: { Filter, Map, Test },
   data() {
     return {
       isPlaying: false
@@ -77,14 +83,8 @@ export default {
     border-radius: 12px;
     z-index: 2;
   }
-  .scenario {
+  .listScenario {
     display: inline-block;
-    position: relative;
-    font-size: 1em;
-    font-family: arial;
-    font-weight: bold;
-    color: #000000;
-    padding: 5px 0px;
   }
   .select select {
     flex-direction: row;
@@ -104,25 +104,30 @@ export default {
   .select select:hover {
     cursor: pointer;
   }
-  .line {
+  .lines {
     display: inline-block;
   }
   .lines span {
     display: block;
     width: 15px;
     border-top: 1px solid black;
-    margin-top: 4px;
-    margin-bottom: 4px;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    margin-right: 5px;
   }
   .compare {
     display: inline-block;
     position: relative;
     background: white;
     border: 1px solid #d9d9d9;
-    padding: 2px 20px;
     border-radius: 32px;
     z-index: 2;
-    top: 4px;
+    top: 17.2px;
+    font-size: 1em;
+    font-family: arial;
+    font-weight: bold;
+    color: #000000;
+    padding: 10px 20px;
   }
   .compare:hover {
     background: #eee;
@@ -132,13 +137,13 @@ export default {
     display: flex;
     align-items: center;
   }
-  .right {
-    font-size: 1.4em;
+  /* .right {
+    font-size: 1em;
     font-family: arial;
     font-weight: bold;
     color: #000000;
-    padding: 10px 6px;
-  }
+    padding: 10px 20px;
+  } */
   .filterSign {
     width: 20px;
     height: auto;

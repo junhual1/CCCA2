@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "gmap-vue": "^3.5.4",
+    "heatmap.js": "^2.0.5"
+  }
+}
