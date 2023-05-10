@@ -4,13 +4,33 @@ import couchdb
 from flask import Flask, render_template, jsonify
 from flask_cors import CORS
 
+# Define the list of node IPs in the cluster
+cluster_nodes = ["172.26.132.54", "172.26.133.32", "172.26.130.9"]
+
 admin = 'admin'
 password = 'qazwsxedc'
-url = f'http://{admin}:{password}@172.26.129.182:5984/'
 
-couch = couchdb.Server(url)
+# Initialize a CouchDB server object for each node
+node_servers = [f"http://{admin}:{password}@{node_ip}:5984/" for node_ip in cluster_nodes]
 
-db = couch['twi']
+for node in node_servers:
+    try:
+        server = couchdb.Server(node)
+        print('Connected to CouchDB node:', node)
+        break  # Exit loop if a healthy node is found
+    except couchdb.http.Unauthorized:
+        print('Unauthorized access to CouchDB node:', node)
+    except couchdb.http.PreconditionFailed:
+        print('Precondition failed for CouchDB node:', node)
+    except couchdb.http.ServerError:
+        print('Error connecting to CouchDB node:', node)
+else:
+    # Executed if no healthy node is found
+    print('No healthy CouchDB nodes found.')
+    exit()
+
+
+db = server['twitter']
 
 
 app = Flask(__name__)
@@ -30,7 +50,7 @@ def api_0(state):
     for row in view:
         result = {"city": row['key'][1],'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['percentage']}
         results.append(result)
-    return {"results": results}
+    return {"results": results} 
 
 @app.route('/api_00/<state>')
 def api_00(state):
