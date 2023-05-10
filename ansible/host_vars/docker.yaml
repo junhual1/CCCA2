@@ -2,7 +2,9 @@
 volumes:
   - device: /dev/vdb
     mountpoint: /var/lib/docker
-  - device: /dev/vdc
-    mountpoint: /data
 
-dk_dir: wordpress
+dk_dir: docker
+
+image_dir: /home/ubuntu/docker
+src_dir: /home/junhual1/ccc/ass2/ansible/images/masto.tar
+file_dir: /home/ubuntu/docker/masto.tar

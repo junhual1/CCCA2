@@ -4,24 +4,37 @@
 
 - name: Create directory
   file:
-    path: /home/ubuntu/docker
+    path: "{{ image_dir }}"
     state: directory
 
 - name: Copy a masto image
   copy:
-    src:  /home/junhual1/ccc/ass2/ansible/images/masto.tar
-    dest: /home/ubuntu/docker/masto.tar
+    src:  "{{ src_dir }}"
+    dest: "{{ file_dir }}"
     remote_src: false
     
+- name: Run a command
+  command: ls -la
 
 - name: Load Docker image from file
-  docker_image:
-    name: masto
-    load_path: /home/ubuntu/docker/masto.tar
+  command: "sudo docker load --input {{file_dir}}"
 
 - name: Run mastodown Docker container
-  docker_container:
-    name: masto_h
-    image: myimage
-    state: started
-    detach: yes
+  command: "sudo docker run --name masto_h -d masto"
+
+
+# - name: Load Docker image from file
+#   community.docker.docker_image_load:
+#     path: /home/ubuntu/docker/masto.tar
+#   register: img_result
+
+# - name: Print the loaded image names
+#   ansible.builtin.debug:
+#     msg: "Loaded the following images: {{ img_result.image_names | join(', ') }}"
+
+# - name: Run mastodown Docker container
+#   docker_container:
+#     name: masto_h
+#     image: masto
+#     state: started
+#     detach: yes
