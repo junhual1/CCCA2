@@ -30,34 +30,21 @@ else:
     exit()
 
 
-db = server['twitter']
-
-
 app = Flask(__name__)
 CORS(app)
 
 
-@app.route('/')
-def root():
-    return render_template('Index.html')
 
-
-
-@app.route('/api_0/<state>')
-def api_0(state):
-    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
-    results = []
-    for row in view:
-        result = {"city": row['key'][1],'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['percentage']}
-        results.append(result)
-    return {"results": results} 
-
-@app.route('/api_00/<state>')
-def api_00(state):
-    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
+#pt1  
+#get the sum of state with geo for map 
+@app.route('/api_twi_state_total/<topic>/<state>')
+def api_twi_state_total(topic,state):
+    db = server['twitter']
+    view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
     total_sum = 0
     mentioned_sum = 0
+
     for row in view:
         result = {
             "city": row['key'][1],
@@ -68,50 +55,175 @@ def api_00(state):
         total_sum += row['value']['total']
         mentioned_sum += row['value']['mentioned']
         results.append(result)
+        
     summary = {
-        "total_sum": total_sum,
-        "mentioned_sum": mentioned_sum,
-        "percentage_avg": mentioned_sum / total_sum
+        "total": total_sum,
+        "count": mentioned_sum,
+        "percentage": mentioned_sum / total_sum
     }
-    return {"summary": summary}
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
 
-@app.route('/api_000/<state>/<city>')
-def api_000(state, city):
-    view = db.view('agism/new-view', startkey=[state,city], endkey=[state,city,{}],group_level = 3)
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+        
+    return {"summary": summary, state: geo[state]}
+    db = server['sudo']
+    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
+    total_sum = 0
+    mentioned_sum = 0
+
     for row in view:
         result = {
             "city": row['key'][1],
-            'total': row['value']['total'],
-            'mentioned': row['value']['mentioned'],
-            'percentage': row['value']['percentage']
+            'total': row['value']['total_people'],
+            'mentioned': row['value']['ageing_population'],
+            'percentage': row['value']['ageing_population_percentage']
         }
+        total_sum += row['value']['total_people']
+        mentioned_sum += row['value']['ageing_population']
         results.append(result)
-    return {"results": results}
-
-
-@app.route('/api_1/<param>')
-def api_1(param):
-    query = {
-        "selector": {
-            "state": {
-                "$eq": param
-            }
-        }
+        
+    summary = {
+        "total": total_sum,
+        "count": mentioned_sum,
+        "percentage": mentioned_sum / total_sum
     }
-    
-    results = []
-    for row in db.find(query):
-        results.append(row)
-    return {'data': results}
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
 
-@app.route('/api_2/<param>')
-def api_2(param):
-    view = db.view('agism/new-view', startkey=[param], endkey=[param, {}])
-    doc = list(view)
-    doc_value = doc[0]["value"]
-    percent= doc_value['mentioned']/doc_value['total']
-    return f"{percent:.5f}"
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+        
+    return {"summary": summary, state: geo[state]}
+
+
+#get the real-time data from mastodon 
+@app.route('/api_mastodon/<topic>')
+def api_mastodon(topic):
+    db = server['mastodon0']
+    view = db.view(f'{topic}/new-view')
+    data = []
+    for row in view:
+        result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage' : row['value']['mentioned']/row['value']['total']}
+        data.append(result)
+    return {topic: data}
+
+
+
+
+#pt2
+#get geo location of state parm 
+@app.route('/api_geo/<state>')
+def api_geo(state):
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
+
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+
+    return geo[state]
+
+#get all citys of the state with geo for twitter
+@app.route('/api_twi_state_city/<topic>/<state>')
+def api_twi_state_city(topic, state):
+    db = server['twitter']
+    view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
+    data = []
+    for row in view:
+        result = {"city": row['key'][1],'total': row['value']['total'], 'count': row['value']['mentioned'], 'percentage': row['value']['percentage']}
+        data.append(result)
+
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
+
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+
+    return {state :geo[state], "results": data} 
+
+
+#get all citys of agism by state with geo for sudo
+
+@app.route('/api_sudo_agism_state_city/<state>')
+def api_sudo_agism_state_city(state):
+    db = server['sudo']
+    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}])
+    data = []
+    for row in view:
+        result = {"city": row['key'][1], 'count': row['value']['ageing_population'], 'percentage': row['value']['ageing_population_percentage']}
+        data.append(result)
+
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
+
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+
+    return {state :geo[state], "results": data} 
+
+
+#get all citys of sexism by state with geo for sudo
+
+@app.route('/api_sudo_sexism_state_city/<state>')
+def api_sudo_sexism_state_city(state):
+    db = server['sudo']
+    view = db.view('sexism/new-view', startkey=[state], endkey=[state, {}])
+    data = []
+    for row in view:
+        result = {"city": row['key'][1], 'male': row['value']['males'], 'female': row['value']['females'], 'ratio': row['value']['gender_ratio']}
+        data.append(result)
+
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
+
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+
+    return {state :geo[state], "results": data} 
+
+#get all citys of unemployment_state by state with geo for sudo
+
+@app.route('/api_sudo_unemployment_state_city/<state>')
+def api_sudo_unemployment_state_city(state):
+    db = server['sudo']
+    view = db.view('unemployment/new-view', startkey=[state], endkey=[state, {}])
+    data = []
+    for row in view:
+        result = {"city": row['key'][1], 'employed': row['value']['people_employed'], 'employment_rate': row['value']['employment_rate']}
+        data.append(result)
+
+    db_geo = server['geocenter']
+    view = db_geo.view('geocenter/new-view')
+    geo = {}
+
+    for row in view:
+        if row['key'] == state:
+            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
+            break
+
+    return {state :geo[state], "results": data} 
+
+
 
 
 if __name__ == '__main__':
