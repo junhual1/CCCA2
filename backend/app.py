@@ -34,7 +34,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-
 #pt1  
 #get the sum of state with geo for map 
 @app.route('/api_twi_state_total/<topic>/<state>')
@@ -103,6 +102,36 @@ def api_twi_state_total(topic,state):
             break
         
     return {"summary": summary, state: geo[state]}
+
+
+#summary of twi server in three topics
+@app.route('/api_twi_total/<topic>')
+def api_twi_total(topic):
+    db = server['twitter']
+    view = db.view(f'{topic}/new-view')
+    results = []
+    total_sum = 0
+    mentioned_sum = 0
+
+    for row in view:
+        result = {
+            'total': row['value']['total'],
+            'mentioned': row['value']['mentioned'],
+            'percentage': row['value']['percentage']
+        }
+        total_sum += row['value']['total']
+        mentioned_sum += row['value']['mentioned']
+        results.append(result)
+        
+    summary = {
+        "total": total_sum,
+        "count": mentioned_sum,
+        "percentage": mentioned_sum / total_sum
+    }
+   
+        
+    return {"summary": summary}
+
 
 
 #get the real-time data from mastodon 
