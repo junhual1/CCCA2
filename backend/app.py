@@ -38,7 +38,7 @@ CORS(app)
 #get the sum of state with geo for map 
 @app.route('/api_twi_state_total/<topic>/<state>')
 def api_twi_state_total(topic,state):
-    db = server['twitter']
+    db = server['twitter1']
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
     total_sum = 0
@@ -107,7 +107,7 @@ def api_twi_state_total(topic,state):
 #summary of twi server in three topics
 @app.route('/api_twi_total/<topic>')
 def api_twi_total(topic):
-    db = server['twitter']
+    db = server['twitter1']
     view = db.view(f'{topic}/new-view')
     results = []
     total_sum = 0
@@ -166,7 +166,7 @@ def api_geo(state):
 #get all citys of the state with geo for twitter
 @app.route('/api_twi_state_city/<topic>/<state>')
 def api_twi_state_city(topic, state):
-    db = server['twitter']
+    db = server['twitter1']
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     data = []
     for row in view:
