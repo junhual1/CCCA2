@@ -8,7 +8,7 @@ instance_flavor: uom.mse.1c4g
 
 # Volume/ can add more
 volumes:
-  - vol_name: masto-vol-base
+  - vol_name: server-vol-base
     vol_size: 10
 
 # # Security group
@@ -16,9 +16,15 @@ security_groups:
   - name: db_tcp  ## for couchdb
     description: "sg for Couchdb access on 5984"
     protocol: tcp
-    port_range_min: 22
-    port_range_max: 22
+    port_range_min: 5984
+    port_range_max: 5984
     remote_ip_prefix: 0.0.0.0/0
+  # - name: server  ## for backend_server
+  #   description: "sg for backend_server access on 5000"
+  #   protocol: tcp
+  #   port_range_min: 5000
+  #   port_range_max: 5000
+  #   remote_ip_prefix: 0.0.0.0/0
   - name: demo_ssh
     description: "Demo security group for SSH access"
     protocol: tcp
@@ -35,5 +41,5 @@ security_groups:
 
 # Instance
 instances:
-  - name: masto-base
-    volumes: ["masto-vol-base"]
+  - name: server-base
+    volumes: ["server-vol-base"]
