@@ -1,5 +1,5 @@
 [COMP90024]
-172.26.130.241
+172.26.133.154
 
 [COMP90024:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'

@@ -1,18 +1,18 @@
-- hosts: localhost
-  vars_files:
-    - host_vars/mrc.yaml
-  gather_facts: true
+# - hosts: localhost
+#   vars_files:
+#     - host_vars/mrc.yaml
+#   gather_facts: true
 
-  roles:
-    # - role: openstack-common
-    - role: openstack-volume
-    - role: openstack-security-group
-    - role: openstack-instance
+#   roles:
+#     # - role: openstack-common
+#     - role: openstack-volume
+#     - role: openstack-security-group
+#     - role: openstack-instance
 
 
 - hosts: COMP90024
   vars_files:
-    - host_vars/docker.yaml
+    - host_vars/server.yaml ## Change this
   gather_facts: true
   
   vars:
@@ -21,10 +21,12 @@
   - ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 
   roles:
-    - role: docker-common
-    - role: docker-volumes
-    - role: docker-install
-    - role: docker-mastodon
+    # - role: docker-common
+    # - role: docker-volumes
+    # - role: docker-install
+    # - role: docker-mastodon
+    # - role: docker-remastodon
+    - role: docker-bk_server
 
 
 

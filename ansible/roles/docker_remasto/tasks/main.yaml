@@ -1,0 +1,23 @@
+---
+- name: remove container
+  command: "sudo docker rm masto_h"
+
+- name: restart container
+  command: "sudo docker run --name masto_h -d masto"
+
+
+# - name: Load Docker image from file
+#   community.docker.docker_image_load:
+#     path: /home/ubuntu/docker/masto.tar
+#   register: img_result
+
+# - name: Print the loaded image names
+#   ansible.builtin.debug:
+#     msg: "Loaded the following images: {{ img_result.image_names | join(', ') }}"
+
+# - name: Run mastodown Docker container
+#   docker_container:
+#     name: masto_h
+#     image: masto
+#     state: started
+#     detach: yes
