@@ -138,13 +138,33 @@ def api_twi_total(topic):
 @app.route('/api_mastodon/<topic>')
 def api_mastodon(topic):
     db = server['mastodon0']
+
+
     view = db.view(f'{topic}/new-view')
+
+    
     data = []
     for row in view:
         result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage' : row['value']['mentioned']/row['value']['total']}
         data.append(result)
-    return {topic: data}
 
+    if 'mastodon1' in server:
+        db1 = server['mastodon1']
+        view1 = db1.view(f'{topic}/new-view')
+
+        for row in view1:
+            result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
+            data.append(result)
+
+    if 'mastodon2' in server:
+        db2 = server['mastodon2']
+        view2 = db2.view(f'{topic}/new-view')
+
+        for row in view2:
+            result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
+            data.append(result)
+
+    return {topic: data}
 
 
 
