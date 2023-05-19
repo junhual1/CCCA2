@@ -1,8 +1,11 @@
 <template>
   <div>
+    <!-- <div>
+      {{ this.test }}
+    </div> -->
     <div id="map" style="height: 82%"></div>
     <div class="scenario">
-      <button @click="onKeywordClick('unemployment')">Unemployment</button>
+      <button @click="onKeywordClick('employment')">Employment</button>
       <button @click="onKeywordClick('agism')">Agism</button>
       <button @click="onKeywordClick('sexism')">Sexism</button>
     </div>
@@ -13,42 +16,49 @@
 export default {
   data() {
     return {
+      test: null,
       map: null,
       circles: [],
       keyword: null,
-      tweets: {
-        unemployment: [
-          { lat: -37.8136, lng: 144.9631, count: 100, percentage: 0.5 },
-          { lat: -33.8688, lng: 151.2093, count: 200, percentage: 1.0 },
-          { lat: -27.4698, lng: 153.0251, count: 50, percentage: 0.25 }
-        ],
-        agism: [
-          { lat: -37.8136, lng: 144.9631, count: 50, percentage: 0.25 },
-          { lat: -33.8688, lng: 151.2093, count: 150, percentage: 0.75 },
-          { lat: -27.4698, lng: 153.0251, count: 75, percentage: 0.375 }
-        ],
-        sexism: [
-          { lat: -37.8136, lng: 144.9631, count: 25, percentage: 0.125 },
-          { lat: -33.8688, lng: 151.2093, count: 75, percentage: 0.375 },
-          { lat: -27.4698, lng: 153.0251, count: 100, percentage: 0.5 }
-        ]
-      },
+      // tweets: {
+      //   employment: [
+      //     { lat: -37.8136, lng: 144.9631, count: 100, percentage: 0.5 },
+      //     { lat: -33.8688, lng: 151.2093, count: 200, percentage: 1.0 },
+      //     { lat: -27.4698, lng: 153.0251, count: 50, percentage: 0.25 }
+      //   ],
+      //   agism: [
+      //     { lat: -37.8136, lng: 144.9631, count: 50, percentage: 0.25 },
+      //     { lat: -33.8688, lng: 151.2093, count: 150, percentage: 0.75 },
+      //     { lat: -27.4698, lng: 153.0251, count: 75, percentage: 0.375 }
+      //   ],
+      //   sexism: [
+      //     { lat: -37.8136, lng: 144.9631, count: 25, percentage: 0.125 },
+      //     { lat: -33.8688, lng: 151.2093, count: 75, percentage: 0.375 },
+      //     { lat: -27.4698, lng: 153.0251, count: 100, percentage: 0.5 }
+      //   ]
+      // },
       current_scenario: null
     };
   },
   mounted() {
     this.initMap();
+    fetch('http://localhost:3000/scenario')
+      .then(res => res.json())
+      .then(data => this.test = data)
+      .catch(err => console.log(err.message))
   },
   methods: {
     initMap() {
       this.map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: -25.2744, lng: 133.7751 },
         zoom: 4.5,
-        gestureHandling: "none"
+        gestureHandling: "none",
+        disableDefaultUI: true
       });
     },
     createCircles() {
-      const keywordTweets = this.tweets[this.keyword];
+      // const keywordTweets = this.tweets[this.keyword];
+      const keywordTweets = this.test[this.keyword];
       keywordTweets.forEach(tweet => {
         const circleOptions = {
           strokeColor: '#FF0000',
@@ -72,7 +82,8 @@ export default {
     },
     showInfoWindow(circle, count, percentage) {
       const infoWindow = new google.maps.InfoWindow({
-        content: `Count: ${count}<br>Percentage: ${percentage}`
+        content: `Count: ${count}<br>Percentage: ${percentage}`,
+        disableAutoPan: true
       });
       infoWindow.setPosition(circle.getCenter());
       infoWindow.open(this.map);

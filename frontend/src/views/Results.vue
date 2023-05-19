@@ -1,15 +1,150 @@
 <template>
   <div>
-    <div>{{ $route.params.scenario }} {{ $route.params.state }}</div>
-    <div id="map1"></div>
-    <div id="map2"></div>
+    <div class="menu">
+      <div class="current">      
+        <span v-if="!this.scenario">Current Scenario: {{ $route.params.scenario }}</span>
+        <span v-else>Current Scenario: {{ scenario }}</span>
+        <span v-if="!this.location">Current Location: {{ $route.params.state }}</span>
+        <span v-else>Current Location: {{ location }}</span>
+      </div>
+      <div class="choose">
+        <span class="title">Change Main Topics</span>
+        <div class="dropdown">
+          <button class="dropdown-toggle" @click="toggleDropdown1">
+            1. Employment discussion rate on Twitter
+          </button>
+          <ul class="dropdown-list" :class="{ 'is-open': isDropdownOpen1 }">
+            <li>
+              <button>vs offical employment rate</button>
+            </li>
+            <li>
+              <button>vs offical aging percentage</button>
+            </li>
+            <li>
+              <button>vs offical gender ratio</button>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-toggle" @click="toggleDropdown2">
+            2. Agism discussion rate on Twitter
+          </button>
+          <ul class="dropdown-list" :class="{ 'is-open': isDropdownOpen2 }">
+            <li>
+              <button>vs offical employment rate</button>
+            </li>
+            <li>
+              <button>vs offical aging percentage</button>
+            </li>
+            <li>
+              <button>vs offical gender ratio</button>
+            </li>
+          </ul>
+        </div>
+        <div class="dropdown">
+          <button class="dropdown-toggle" @click="toggleDropdown3">
+            3. Sexism discussion rate on Twitter
+          </button>
+          <ul class="dropdown-list" :class="{ 'is-open': isDropdownOpen3 }">
+            <li>
+              <button>vs offical employment rate</button>
+            </li>
+            <li>
+              <button>vs offical aging percentage</button>
+            </li>
+            <li>
+              <button>vs offical gender ratio</button>
+            </li>
+          </ul>
+        </div>
+        <div class="location">
+          <span>Change the location: </span>
+          <select v-model="location">
+            <option value="NSW">NSW</option>
+            <option value="VIC">VIC</option>
+            <option value="QlD">QLD</option>
+            <option value="SA">SA</option>
+            <option value="WA">WA</option>
+            <option value="ACT">ACT</option>
+            <option value="NT">NT</option>
+            <option value="TAS">TAS</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    <div class="map1">
+      <h3>Data from Twitter</h3>
+      <div id="map1"></div>
+    </div>
+    <div class="map2">
+      <h3>Data from Sudo</h3>
+      <div id="map2"></div>
+    </div>
+
+    <!-- <div class="chart">
+      <Bar
+        id="my-chart-id"
+        :options="chartOptions"
+        :data="chartData"
+      />
+    </div> -->
+    <Chart />
+
   </div>
 </template>
 
 <script>
+import Chart from '../components/Chart.vue'
+// import 'chart.js';
+// import { Bar } from 'vue-chartjs'
+// import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+// ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+
 export default {
+  name: 'Result',
+  components: { Chart },
+  // extends: Bar,
+
+  // props: ['chartData', 'options'],
+
+
   data() {
     return {
+        chartData: {
+          labels: ['Category 1', 'Category 2', 'Category 3'],
+          datasets: [
+            {
+              label: 'Data Series 1',
+              backgroundColor: 'rgba(75, 192, 192, 0.2)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1,
+              data: [10, 20, 30]
+            }
+          ]
+        },
+        chartOptions: {
+          responsive: true,
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
+        },
+
+
+
+        scenario: null,
+        location: null,
+        isDropdownOpen1: false,
+        isDropdownOpen2: false,
+        isDropdownOpen3: false,
         map1: null,
         map2: null,
         circles1: [],
@@ -86,24 +221,50 @@ export default {
     };
   },
   mounted() {
-    this.initMap();
+    this.initMap()
     this.createCircles()
+
+    // this.renderChart(this.chartData, this.options);
+    // this.createChart();
   },
   methods: {
+    // createChart() {
+    //   new Chart(this.$refs.chart, {
+    //     type: 'bar',
+    //     data: this.chartData,
+    //     options: this.chartOptions
+    //   });
+    // },
+
+
+    toggleDropdown1() {
+      this.scenario = "Employment"
+      this.isDropdownOpen1 = !this.isDropdownOpen1;
+    },
+    toggleDropdown2() {
+      this.scenario = "Agism"
+      this.isDropdownOpen2 = !this.isDropdownOpen2;
+    },
+    toggleDropdown3() {
+      this.scenario = "Sexism"
+      this.isDropdownOpen3 = !this.isDropdownOpen3;
+    },
     initMap() {
       const state = this.$route.params.state
       if (state === 'VIC') {
         this.map1 = new google.maps.Map(document.getElementById('map1'), {
             // center: { lat: -25.2744, lng: 133.7751 },
             center: this.center.VIC,
-            zoom: 6.5,
-        gestureHandling: "none"
+            zoom: 6,
+            gestureHandling: "none",
+            disableDefaultUI: true
         })
         this.map2 = new google.maps.Map(document.getElementById('map2'), {
             // center: { lat: -25.2744, lng: 133.7751 },
             center: this.center.VIC,
-            zoom: 6.5,
-        gestureHandling: "none"
+            zoom: 6,
+            gestureHandling: "none",
+            disableDefaultUI: true
         })
       }
     },
@@ -168,7 +329,8 @@ export default {
     },
     showInfoWindow1(circle, name, count, total, percentage) {
       const infoWindow1 = new google.maps.InfoWindow({
-        content: `Name: ${name}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`
+        content: `Name: ${name}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
       });
       infoWindow1.setPosition(circle.getCenter());
       infoWindow1.open(this.map1);
@@ -176,7 +338,8 @@ export default {
     },
     showInfoWindow2(circle, name, count, total, percentage) {
       const infoWindow2 = new google.maps.InfoWindow({
-        content: `Name: ${name}<br>Count: ${count}<br>Ageing population: ${total}<br>Ageing population percentage: ${percentage.toFixed(3)}%`
+        content: `Name: ${name}<br>Count: ${count}<br>Ageing population: ${total}<br>Ageing population percentage: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
       });
       infoWindow2.setPosition(circle.getCenter());
       infoWindow2.open(this.map2);
@@ -186,45 +349,112 @@ export default {
       if (this.infoWindow) {
         this.infoWindow.close();
       }
-    },
-    // onKeywordClick(keyword) {
-    //   this.keyword = keyword;
-      
-    //   if (this.keyword !== this.current_scenario) {
-    //     this.clearCircles();
-    //     this.createCircles();
-    //     this.current_scenario = this.keyword;
-    //   }
-    //   else {
-    //     this.clearCircles();
-    //     this.current_scenario = null
-    //   }
-    // },
-    // clearCircles() {
-    //   this.circles.forEach(circle => {
-    //     circle.setMap(null);
-    //   });
-    //   this.circles = [];
-    // }
+    }
   }
 }
 </script>
 
 <style>
-#map1 {
+.dropdown-list {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dropdown-list button {
+  /* border: 1px solid #ddd; */
+  border: none;
+  border-bottom: 1px solid #ddd;
+  background: white;
+  width: 100%;
+  padding: 3px;
+  text-align: left;
+}
+.dropdown-list button:hover {
+  background: #eee;
+}
+.dropdown-list.is-open {
+  display: block;
+}
+.dropdown-item::before {
+  content: none;
+}
+.dropdown-toggle {
+  width: 100%;
+  text-align: left;
+}
+
+
+.menu {
+  position: absolute;
+  width: 20%;
+  height: 95%;
+  border: 1px solid #ddd;
+}
+.menu div {
+  position: relative;
+}
+.menu span {
+  display: inline-block;
+}
+.current {
+  position: relative;
+  margin: 10px;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+.current span {
+  display: block;
+}
+/* .choose {
+  
+} */
+.choose .title {
+  position: relative;
+  display: inline;
+  margin: 20px;
+  padding: 10px 0;
+}
+.choose div {
+  position: relative;
+  /* display: flex; */
+  margin-top: 20px;
+  margin-bottom: 60px;
+}
+
+.map1 {
     position: absolute;
-    width: 45%;
-    height: 82%;
-    left: 0px;
-    bottom: 0px;
+    width: 33%;
+    height: 40%;
+    left: 25%;
+    z-index: 1;
+}
+.map1 h3 {
+    position: relative;
+    z-index: 1;
+}
+#map1 {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+.map2 {
+    position: absolute;
+    width: 33%;
+    height: 40%;
+    right: 5%;
+    z-index: 1;
+}
+.map2 h3 {
+    position: relative;
+    /* display: inline-block; */
     z-index: 1;
 }
 #map2 {
-    position: absolute;
-    width: 45%;
-    height: 82%;
-    right: 0px;
-    bottom: 0px;
+    position: relative;
+    width: 100%;
+    height: 100%;
     z-index: 1;
 }
 .scenario {
@@ -249,4 +479,19 @@ export default {
   cursor: pointer;
   background: #eee;
 }
+
+/* .chart {
+    position: absolute;
+    top: 60%;
+    width: 33%;
+    height: 40%;
+    right: 5%;
+    z-index: 1;
+}
+.chart bar-chart {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+} */
 </style>

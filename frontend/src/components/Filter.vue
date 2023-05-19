@@ -6,7 +6,7 @@
     <div class="filterSelect">
         <span class="filterScenario">Scenario: </span>
         <select v-model="select1">
-            <option value="Unemployment">Unemployment</option>
+            <option value="Employment">Employment</option>
             <option value="Agism">Agism</option>
             <option value="Sexism">Sexism</option>
         </select>
@@ -20,14 +20,14 @@
                 <option value="feature3">feature3</option>
             </select>
         </div> -->
-        <div class="feature2">
-            <span>State: </span>
-            <select v-model="select3">
-                <option value="VIC">VIC</option>
-                <option value="NSW">NSW</option>
-                <option value="QLD">QLD</option>
-            </select>
-        </div>
+        <!-- <div class="feature2"> -->
+        <span>State: </span>
+        <select v-model="select3">
+            <option value="VIC">VIC</option>
+            <option value="NSW">NSW</option>
+            <option value="QLD">QLD</option>
+        </select>
+        <!-- </div> -->
     </div>
     <div class="submit">
         <button @click="search">Search</button>
@@ -61,15 +61,15 @@ export default {
 <style>
   #filter {
     position: absolute;
-    width: 70%;
-    height: 50%;
+    width: 30%;
+    height: 30%;
     border-radius: 12px;
     background: #f5f5f5;
     color: white;
     padding: 10px 0;
-    margin: 40px auto;
+    margin: 20px auto;
     z-index: 3;
-    left: 15%;
+    left: 35%;
     top: 20%;
   }  
   #filter h1 {
@@ -80,7 +80,7 @@ export default {
     margin: 10px auto;
   }
   .filterSelect {
-    display: inline-block;
+    /* display: inline-block; */
     position: relative;
     padding: 10px 10px;
     border-radius: 12px;
@@ -104,7 +104,7 @@ export default {
     align-items: center;
     padding: 5px 5px;
     gap: 4px;
-    width: 500px;
+    width: 50%;
     height: 40px;
     background: #FFFFFF;
     border: 1px solid #D9D9D9;
@@ -116,7 +116,8 @@ export default {
   .feature {
     position: relative;
     color: #000000;
-    top: 15%;
+    /* top: 10%; */
+    padding: 10px 10px;
     font-size: 1em;
     font-family: arial;
     font-weight: bold;
@@ -127,7 +128,7 @@ export default {
     align-items: center;
     padding: 5px 5px;
     gap: 4px;
-    width: 200px;
+    width: 50%;
     height: 40px;
     background: #FFFFFF;
     border: 1px solid #D9D9D9;
@@ -155,7 +156,7 @@ export default {
   }
   .submit {
     position: relative;
-    top: 40%;
+    top: 10%;
   }
   .submit button {
     border: none;
