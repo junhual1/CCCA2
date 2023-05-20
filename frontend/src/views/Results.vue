@@ -89,56 +89,23 @@
         :data="chartData"
       />
     </div> -->
-    <Chart />
+    <!-- <Chart /> -->
+    <div class="dynamic-chart">
+      <Chart />
+    </div>
 
   </div>
 </template>
 
 <script>
 import Chart from '../components/Chart.vue'
-// import 'chart.js';
-// import { Bar } from 'vue-chartjs'
-// import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-// ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
-
 
 export default {
   name: 'Result',
   components: { Chart },
-  // extends: Bar,
-
-  // props: ['chartData', 'options'],
-
 
   data() {
     return {
-        chartData: {
-          labels: ['Category 1', 'Category 2', 'Category 3'],
-          datasets: [
-            {
-              label: 'Data Series 1',
-              backgroundColor: 'rgba(75, 192, 192, 0.2)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-              data: [10, 20, 30]
-            }
-          ]
-        },
-        chartOptions: {
-          responsive: true,
-          scales: {
-            yAxes: [
-              {
-                ticks: {
-                  beginAtZero: true
-                }
-              }
-            ]
-          }
-        },
-
-
 
         scenario: null,
         location: null,
@@ -223,20 +190,8 @@ export default {
   mounted() {
     this.initMap()
     this.createCircles()
-
-    // this.renderChart(this.chartData, this.options);
-    // this.createChart();
   },
   methods: {
-    // createChart() {
-    //   new Chart(this.$refs.chart, {
-    //     type: 'bar',
-    //     data: this.chartData,
-    //     options: this.chartOptions
-    //   });
-    // },
-
-
     toggleDropdown1() {
       this.scenario = "Employment"
       this.isDropdownOpen1 = !this.isDropdownOpen1;
@@ -406,9 +361,6 @@ export default {
 .current span {
   display: block;
 }
-/* .choose {
-  
-} */
 .choose .title {
   position: relative;
   display: inline;
@@ -448,7 +400,6 @@ export default {
 }
 .map2 h3 {
     position: relative;
-    /* display: inline-block; */
     z-index: 1;
 }
 #map2 {
@@ -480,18 +431,4 @@ export default {
   background: #eee;
 }
 
-/* .chart {
-    position: absolute;
-    top: 60%;
-    width: 33%;
-    height: 40%;
-    right: 5%;
-    z-index: 1;
-}
-.chart bar-chart {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-} */
 </style>

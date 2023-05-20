@@ -42,10 +42,10 @@ export default {
   },
   mounted() {
     this.initMap();
-    fetch('http://localhost:3000/scenario')
-      .then(res => res.json())
-      .then(data => this.test = data)
-      .catch(err => console.log(err.message))
+    // fetch('http://localhost:3000/scenario')
+    //   .then(res => res.json())
+    //   .then(data => this.test = data)
+    //   .catch(err => console.log(err.message))
   },
   methods: {
     initMap() {

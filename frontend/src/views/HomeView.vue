@@ -34,6 +34,10 @@
       </div>
     </div>
 
+    <div class="mastodon-chart">
+      <Chart />
+    </div>
+
 
   </div>
 
@@ -43,13 +47,34 @@
 import Filter from '../components/Filter.vue'
 import Map from '../components/Map.vue'
 import Test from '../components/test.vue'
+import Chart from '../components/Chart.vue'
 
 export default {
   name: 'HomeView',
-  components: { Filter, Map, Test },
+  components: { Filter, Map, Test, Chart },
   data() {
     return {
-      isPlaying: false
+      // chartData: {
+      //     labels: ['Label 1', 'Label 2', 'Label 3'],
+      //     datasets: [
+      //       {
+      //         label: 'Data',
+      //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      //         borderColor: 'rgba(75, 192, 192, 1)',
+      //         borderWidth: 1,
+      //         data: [10, 20, 15]
+      //       }
+      //     ]
+      //   },
+      //   chartOptions: {
+      //     responsive: true,
+      //     maintainAspectRatio: false,
+      //     // Adjust the size of the chart
+      //     height: 300, // Set the desired height
+      //     width: 400 // Set the desired width
+      //   },
+
+        isPlaying: false
     }
   },
   methods: {
@@ -165,5 +190,14 @@ export default {
     justify-content: center;
     align-items: center;
     z-index: 2;
+  }
+
+  .mastodon-chart {
+    position: absolute;
+    top: 30%;
+    width: 20%;
+    height: 20%;
+    /* left: 5%; */
+    z-index: 1;
   }
 </style>

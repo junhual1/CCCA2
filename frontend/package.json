@@ -8,8 +8,11 @@
   },
   "dependencies": {
     "@googlemaps/js-api-loader": "^1.15.1",
+    "axios": "^1.4.0",
+    "chart.js": "^3.7.0",
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
+    "vue-chartjs": "^5.2.0",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {

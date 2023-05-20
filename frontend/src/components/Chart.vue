@@ -1,42 +1,86 @@
 <template>
-  <Bar
-    id="chart"
-    :options="chartOptions"
-    :data="chartData"
-  />
+  <div>
+    <div class="chart">
+      <canvas id="myChart" style="width: 400px; height: 300px;"></canvas>
+    </div>
+  </div>
 </template>
 
 <script>
-import { Bar } from 'vue-chartjs'
-import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+import axios from 'axios';
+import Chart from 'chart.js/auto';
 
 export default {
-  name: 'BarChart',
-  components: { Bar },
   data() {
     return {
-      chartData: {
-        labels: [ 'January', 'February', 'March' ],
-        datasets: [ { data: [40, 20, 12] } ]
-      },
-      chartOptions: {
-        responsive: true
+      mastodonEmployment: null,
+      mastodonAgism: null,
+      mastodonSexism: null,
+    }
+  },
+  mounted() {
+    Promise.all([
+      axios.get('http://127.0.0.1:5000/api_mastodon/unemployment'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/agism'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/sexism')
+    ])
+      .then(responses => {
+        this.mastodonEmployment = responses[0].data.unemployment[0];
+        this.mastodonAgism = responses[1].data.agism[0];
+        this.mastodonSexism = responses[2].data.sexism[0];
+        this.createBarChart();
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  },
+  methods: {
+    createBarChart() {
+      if (this.mastodonAgism) {
+        const ctx = document.getElementById('myChart').getContext('2d');
+        new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['Employment', 'Agism', 'Sexism'],
+            datasets: [
+              {
+                label: 'Mentioned',
+                data: [this.mastodonEmployment.mentioned, this.mastodonAgism.mentioned, this.mastodonSexism.mentioned],
+                backgroundColor: 'rgba(0, 0, 0, 0.4)',
+                borderColor: 'rgba(0, 0, 0, 1)',
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
+            },
+            plugins: {
+              title: {
+                display: true,
+                text: 'Number of mentions of each topic on Mastodon',
+              },
+            },
+          },
+        });
       }
     }
+
   }
 }
 </script>
 
 <style>
-#chart {
+.chart {
     position: absolute;
-    width: 500px;
-    height: 500px;
-    left: 0px;
-    bottom: 0px;
+    top: 10%;
+    width: 100%;
+    height: 100%;
+    left: 10%;
     z-index: 1;
 }
-
 </style>
