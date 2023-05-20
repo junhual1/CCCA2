@@ -26,6 +26,11 @@
             <option value="VIC">VIC</option>
             <option value="NSW">NSW</option>
             <option value="QLD">QLD</option>
+            <option value="QLD">SA</option>
+            <option value="QLD">WA</option>
+            <option value="QLD">TAS</option>
+            <option value="QLD">ACT</option>
+            <option value="QLD">NT</option>
         </select>
         <!-- </div> -->
     </div>

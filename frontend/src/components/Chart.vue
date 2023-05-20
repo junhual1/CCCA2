@@ -77,7 +77,6 @@ export default {
 <style>
 .chart {
     position: absolute;
-    top: 10%;
     width: 100%;
     height: 100%;
     left: 10%;

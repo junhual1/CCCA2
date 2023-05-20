@@ -431,4 +431,13 @@ export default {
   background: #eee;
 }
 
+.dynamic-chart {
+  position: absolute;
+  top: 51%;
+  width: 35%;
+  /* height: 10%; */
+  left: 38%;
+  z-index: 1;
+}
+
 </style>

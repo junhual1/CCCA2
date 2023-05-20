@@ -35,9 +35,8 @@
     </div>
 
     <div class="mastodon-chart">
-      <Chart />
+      <MChart />
     </div>
-
 
   </div>
 
@@ -47,11 +46,11 @@
 import Filter from '../components/Filter.vue'
 import Map from '../components/Map.vue'
 import Test from '../components/test.vue'
-import Chart from '../components/Chart.vue'
+import MChart from '../components/mastodonChart.vue'
 
 export default {
   name: 'HomeView',
-  components: { Filter, Map, Test, Chart },
+  components: { Filter, Map, Test, MChart },
   data() {
     return {
       // chartData: {
@@ -73,7 +72,6 @@ export default {
       //     height: 300, // Set the desired height
       //     width: 400 // Set the desired width
       //   },
-
         isPlaying: false
     }
   },
@@ -194,9 +192,9 @@ export default {
 
   .mastodon-chart {
     position: absolute;
-    top: 30%;
+    top: 40%;
     width: 20%;
-    height: 20%;
+    height: 40%;
     /* left: 5%; */
     z-index: 1;
   }

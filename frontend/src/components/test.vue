@@ -5,61 +5,151 @@
     </div> -->
     <div id="map" style="height: 82%"></div>
     <div class="scenario">
-      <button @click="onKeywordClick('employment')">Employment</button>
-      <button @click="onKeywordClick('agism')">Agism</button>
-      <button @click="onKeywordClick('sexism')">Sexism</button>
+      <button :style="{ backgroundColor: buttonColor1 }" @click="onKeywordClick('employment')">Employment</button>
+      <button :style="{ backgroundColor: buttonColor2 }" @click="onKeywordClick('agism')">Agism</button>
+      <button :style="{ backgroundColor: buttonColor3 }" @click="onKeywordClick('sexism')">Sexism</button>
     </div>
+
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
-      test: null,
       map: null,
       circles: [],
       keyword: null,
-      // tweets: {
-      //   employment: [
-      //     { lat: -37.8136, lng: 144.9631, count: 100, percentage: 0.5 },
-      //     { lat: -33.8688, lng: 151.2093, count: 200, percentage: 1.0 },
-      //     { lat: -27.4698, lng: 153.0251, count: 50, percentage: 0.25 }
-      //   ],
-      //   agism: [
-      //     { lat: -37.8136, lng: 144.9631, count: 50, percentage: 0.25 },
-      //     { lat: -33.8688, lng: 151.2093, count: 150, percentage: 0.75 },
-      //     { lat: -27.4698, lng: 153.0251, count: 75, percentage: 0.375 }
-      //   ],
-      //   sexism: [
-      //     { lat: -37.8136, lng: 144.9631, count: 25, percentage: 0.125 },
-      //     { lat: -33.8688, lng: 151.2093, count: 75, percentage: 0.375 },
-      //     { lat: -27.4698, lng: 153.0251, count: 100, percentage: 0.5 }
-      //   ]
-      // },
-      current_scenario: null
+      buttonColor1: 'white',
+      buttonColor2: 'white',
+      buttonColor3: 'white',
+
+      current_scenario: null,
+      keywordTweets: null,
+
+      twi_nsw: null,
+      twi_vic: null,
+      twi_qld: null,
+      twi_sa: null,
+      twi_wa: null,
+      twi_tas: null,
+      twi_act: null,
+      twi_nt: null,
+
+      employment: [],
+      agism: [],
+      sexism: []
     };
   },
   mounted() {
     this.initMap();
-    // fetch('http://localhost:3000/scenario')
-    //   .then(res => res.json())
-    //   .then(data => this.test = data)
-    //   .catch(err => console.log(err.message))
+    Promise.all([
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/new%20south%20wales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/south%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/western%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/australian%20capital%20territory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/northern%20territory'),
+
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/new%20south%20wales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/south%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/western%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/australian%20capital%20territory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/northern%20territory'),
+
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/new%20south%20wales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/south%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/western%20australia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/australian%20capital%20territory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/northern%20territory')
+    ])
+      .then(responses => {
+        this.twi_nsw = { ...responses[0].data['new south wales'], ...responses[0].data['summary']};
+        this.employment.push(this.twi_nsw)
+        this.twi_vic = { ...responses[1].data['victoria'], ...responses[1].data['summary']};
+        this.employment.push(this.twi_vic)
+        this.twi_qld = { ...responses[2].data['queensland'], ...responses[2].data['summary']};
+        this.employment.push(this.twi_qld)
+        this.twi_sa = { ...responses[3].data['south australia'], ...responses[3].data['summary']};
+        this.employment.push(this.twi_sa)
+        this.twi_wa = { ...responses[4].data['western australia'], ...responses[4].data['summary']};
+        this.employment.push(this.twi_wa)
+        this.twi_tas = { ...responses[5].data['tasmania'], ...responses[5].data['summary']};
+        this.employment.push(this.twi_tas)
+        this.twi_act = { ...responses[6].data['australian capital territory'], ...responses[6].data['summary']};
+        this.employment.push(this.twi_act)
+        this.twi_nt = { ...responses[7].data['northern territory'], ...responses[7].data['summary']};
+        this.employment.push(this.twi_nt)
+
+        this.twi_nsw = { ...responses[8].data['new south wales'], ...responses[8].data['summary']};
+        this.agism.push(this.twi_nsw)
+        this.twi_vic = { ...responses[9].data['victoria'], ...responses[9].data['summary']};
+        this.agism.push(this.twi_vic)
+        this.twi_qld = { ...responses[10].data['queensland'], ...responses[10].data['summary']};
+        this.agism.push(this.twi_qld)
+        this.twi_sa = { ...responses[11].data['south australia'], ...responses[11].data['summary']};
+        this.agism.push(this.twi_sa)
+        this.twi_wa = { ...responses[12].data['western australia'], ...responses[12].data['summary']};
+        this.agism.push(this.twi_wa)
+        this.twi_tas = { ...responses[13].data['tasmania'], ...responses[13].data['summary']};
+        this.agism.push(this.twi_tas)
+        this.twi_act = { ...responses[14].data['australian capital territory'], ...responses[14].data['summary']};
+        this.agism.push(this.twi_act)
+        this.twi_nt = { ...responses[15].data['northern territory'], ...responses[15].data['summary']};
+        this.agism.push(this.twi_nt)
+
+        this.twi_nsw = { ...responses[16].data['new south wales'], ...responses[16].data['summary']};
+        this.sexism.push(this.twi_nsw)
+        this.twi_vic = { ...responses[17].data['victoria'], ...responses[17].data['summary']};
+        this.sexism.push(this.twi_vic)
+        this.twi_qld = { ...responses[18].data['queensland'], ...responses[18].data['summary']};
+        this.sexism.push(this.twi_qld)
+        this.twi_sa = { ...responses[19].data['south australia'], ...responses[19].data['summary']};
+        this.sexism.push(this.twi_sa)
+        this.twi_wa = { ...responses[20].data['western australia'], ...responses[20].data['summary']};
+        this.sexism.push(this.twi_wa)
+        this.twi_tas = { ...responses[21].data['tasmania'], ...responses[21].data['summary']};
+        this.sexism.push(this.twi_tas)
+        this.twi_act = { ...responses[22].data['australian capital territory'], ...responses[22].data['summary']};
+        this.sexism.push(this.twi_act)
+        this.twi_nt = { ...responses[23].data['northern territory'], ...responses[23].data['summary']};
+        this.sexism.push(this.twi_nt)
+      })
+      .catch(error => {
+        console.error(error);
+      });
   },
   methods: {
     initMap() {
       this.map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -25.2744, lng: 133.7751 },
+        center: { lat: -28.2744, lng: 133.7751 },
         zoom: 4.5,
         gestureHandling: "none",
         disableDefaultUI: true
       });
     },
     createCircles() {
-      // const keywordTweets = this.tweets[this.keyword];
-      const keywordTweets = this.test[this.keyword];
-      keywordTweets.forEach(tweet => {
+      if (this.keyword === 'employment') {
+        this.keywordTweets = this.employment
+        this.changeButtonColor1();
+      } else if (this.keyword === 'agism') {
+        this.keywordTweets = this.agism
+        this.changeButtonColor2();
+      } else if (this.keyword === 'sexism') {
+        this.keywordTweets = this.sexism
+        this.changeButtonColor3();
+      }
+      this.keywordTweets.forEach(tweet => {
         const circleOptions = {
           strokeColor: '#FF0000',
           strokeOpacity: 0.8,
@@ -68,11 +158,11 @@ export default {
           fillOpacity: 0.35,
           map: this.map,
           center: new google.maps.LatLng(tweet.lat, tweet.lng),
-          radius: tweet.count * 1000 // convert count to meters
+          radius: Math.sqrt(tweet.percentage) * 5000000 // convert count to meters
         };
         const circle = new google.maps.Circle(circleOptions);
         circle.addListener('mouseover', () => {
-          this.showInfoWindow(circle, tweet.count, tweet.percentage);
+          this.showInfoWindow(circle, tweet.count, tweet.percentage, tweet.total);
         });
         circle.addListener('mouseout', () => {
           this.hideInfoWindow();
@@ -80,9 +170,9 @@ export default {
         this.circles.push(circle);
       });
     },
-    showInfoWindow(circle, count, percentage) {
+    showInfoWindow(circle, count, percentage, total) {
       const infoWindow = new google.maps.InfoWindow({
-        content: `Count: ${count}<br>Percentage: ${percentage}`,
+        content: `Count: ${count}<br>Percentage: ${percentage.toFixed(3)}<br>Total: ${total}`,
         disableAutoPan: true
       });
       infoWindow.setPosition(circle.getCenter());
@@ -96,9 +186,18 @@ export default {
     },
     onKeywordClick(keyword) {
       this.keyword = keyword;
+      this.clearButtonColor();
+      // if (this.keyword === 'employment') {
+      //   this.changeButtonColor1();
+      // } else if (this.keyword === 'agism') {
+      //   this.changeButtonColor2();
+      // } else if (this.keyword === 'sexism') {
+      //   this.changeButtonColor3();
+      // }
       
       if (this.keyword !== this.current_scenario) {
         this.clearCircles();
+        
         this.createCircles();
         this.current_scenario = this.keyword;
       }
@@ -112,6 +211,32 @@ export default {
         circle.setMap(null);
       });
       this.circles = [];
+    },
+    changeButtonColor1() {
+      if (this.buttonColor1 === 'white') {
+        this.buttonColor1 = 'grey';
+      } else {
+        this.buttonColor1 = 'white'
+      }
+    },
+    changeButtonColor2() {
+      if (this.buttonColor2 === 'white') {
+        this.buttonColor2 = 'grey';
+      } else {
+        this.buttonColor2 = 'white'
+      }
+    },
+    changeButtonColor3() {
+      if (this.buttonColor3 === 'white') {
+        this.buttonColor3 = 'grey';
+      } else {
+        this.buttonColor3 = 'white'
+      }
+    },
+    clearButtonColor() {
+      this.buttonColor1 = 'white'
+      this.buttonColor2 = 'white'
+      this.buttonColor3 = 'white'
     }
   }
 }
