@@ -20,10 +20,10 @@ class Listener(StreamListener):
     def on_update(self, status):
         a_toot = {}
         count = cnt['count']
-        if f'mastodon_2_{count//2000000}' in server:
-            db = server[f'mastodon_2_{count//2000000}']
-        elif count%2000000 == 0:
-            db = server.create(f'mastodon_2_{count//2000000}')
+        if f'mastodon_2_{count//1000000}' in server:
+            db = server[f'mastodon_2_{count//1000000}']
+        elif count%1000000 == 0:
+            db = server.create(f'mastodon_2_{count//1000000}')
             map_unemployment = '''function (doc) {
             var keywords = ['got fired','employ','idle','job loss',' layoff','jobless','redundancy',
             'furlough','downsizing','out of work','retrenchment','job hunt',
@@ -140,7 +140,7 @@ class Listener(StreamListener):
             db.save(doc_agism)
             db.save(doc_sexism)
         else: 
-            db = server[f'mastodon_2_{count//2000000}']
+            db = server[f'mastodon_2_{count//1000000}']
         a_toot["content"] = status['content']
         a_toot["time"] = status['created_at'].date().strftime("%Y-%m-%d")
         a_toot['toot_id']=str(status['id'])
