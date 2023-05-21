@@ -134,7 +134,7 @@ def api_twi_total(topic):
 
 
 
-#get the real-time data from mastodon 
+# changed, get the real-time data from mastodon 
 @app.route('/api_mastodon/<topic>')
 def api_mastodon(topic):
     result = {'total':0,'mentioned':0,'percentage':0}
