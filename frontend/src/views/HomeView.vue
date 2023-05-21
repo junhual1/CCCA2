@@ -4,17 +4,8 @@
       <h1>Home Page</h1>
     </div>
     <div>
-      <!-- <div class="select">
-        <span class="scenario">Scenario: </span>
-        <select>
-          <option value="scenario1">scenario1</option>
-          <option value="scenario2">scenario2</option>
-          <option value="scenario3">scenario3</option>
-        </select>
-      </div> -->
       <div class="listScenario">
-        <Test />
-      <!-- <Map /> -->
+        <Test @toggle-table="toggleTable" />
       </div>
       <button @click="showFilter" class="compare">
         <div class="comparison">
@@ -35,7 +26,12 @@
     </div>
 
     <div class="mastodon-chart">
-      <MChart />
+      <MChart :showChart="displayChart" />
+    </div>
+
+    <div class="table">
+      <!-- <Test @toggle-table="toggleTable" /> -->
+      <Table :showTable="displayTable" />
     </div>
 
   </div>
@@ -47,32 +43,16 @@ import Filter from '../components/Filter.vue'
 import Map from '../components/Map.vue'
 import Test from '../components/test.vue'
 import MChart from '../components/mastodonChart.vue'
+import Table from '../components/Table.vue'
 
 export default {
   name: 'HomeView',
-  components: { Filter, Map, Test, MChart },
+  components: { Filter, Map, Test, MChart, Table },
   data() {
     return {
-      // chartData: {
-      //     labels: ['Label 1', 'Label 2', 'Label 3'],
-      //     datasets: [
-      //       {
-      //         label: 'Data',
-      //         backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      //         borderColor: 'rgba(75, 192, 192, 1)',
-      //         borderWidth: 1,
-      //         data: [10, 20, 15]
-      //       }
-      //     ]
-      //   },
-      //   chartOptions: {
-      //     responsive: true,
-      //     maintainAspectRatio: false,
-      //     // Adjust the size of the chart
-      //     height: 300, // Set the desired height
-      //     width: 400 // Set the desired width
-      //   },
-        isPlaying: false
+        isPlaying: false,
+        // displayChart: false,
+        // displayTable: false
     }
   },
   methods: {
@@ -81,7 +61,10 @@ export default {
     },
     closeFilter() {
       this.isPlaying = false
-    }
+    },
+    // toggleTable() {
+    //   this.displayTable = !this.displayTable;
+    // }
   }
 }
 </script>
@@ -197,5 +180,21 @@ export default {
     height: 40%;
     /* left: 5%; */
     z-index: 1;
+  }
+
+  .table {
+    position: absolute;
+    border-collapse: collapse;
+    top: 23%;
+    left: 2%;
+    z-index: 1;
+  }
+  .table th {
+    border: 1px solid black;
+    padding: 8px;
+  }
+  .table td {
+    border: 1px solid black;
+    padding: 8px;
   }
 </style>
