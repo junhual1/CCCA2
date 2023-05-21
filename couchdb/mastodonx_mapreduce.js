@@ -1,23 +1,27 @@
 // agism --- new-view
 //// Map
 function (doc) {
-    var keywords = ['aging population','senior citizens','gerontology','age-related','retire',
-    'longevity','ageism','elderly','silver economy','age-friendly','age discrimination','elder abuse','annuation',
-    'pension','senile','nursing home', 'rest home','endowment insurance','aging care','old-age','old age'];
+
+    const keywords = [/aging population/,/senior citizens/,/gerontology/,/age-related/,/retire/,
+    /longevity/,/ageism/,/elderly/,/silver economy/,/age-friendly/,/age discrimination/,/elder abuse/,
+    /annuation/,/pension/,/senile/,/nursing home/, /rest home/,/endowment insurance/,/aging care/,
+    /old-age/,/old age/];
+    
     if (doc.content) {
-        var found = {};
-        for (var i = 0; i < keywords.length; i++) {
-            if (doc.content.toLowerCase().includes(keywords[i])) {
-                found[keywords[i]] = true;
-            }
+      var found = {};
+      for (var pattern of keywords) {
+        match = doc.content.toLowerCase().match(pattern);
+        if (match) {
+          found[pattern] = true;
         }
-        if (Object.keys(found).length > 0) {
-            emit('agism', {total: 1, mentioned:1});
-        } else{
-            emit('agism', {total: 1, mentioned:0});
-        }
-    } else {
+      }
+      if (Object.keys(found).length > 0) {
+        emit('agism', {total: 1, mentioned:1});
+      } else{
         emit('agism', {total: 1, mentioned:0});
+      }
+    } else {
+      emit('agism', {total: 1, mentioned:0});
     }
 }
 //// Reduce
@@ -36,25 +40,29 @@ function (keys, values, rereduce) {
 // sexism --- new-view
 //// Map
 function (doc) {
-    var keywords = ['gender discrimination','sexism','gender bias','sexual harassment','glass ceiling','pay gap',
-    "women's rights",'feminis','gender inequality','male privilege','woman security','women in leadership','gender stereotypes',
-    'gender roles','gender-based violence','sexual violence','misogyny','gender issue','metoo','timesup','believewomen',
-    'toxicMasculinity','genderequality','equalpay','endrapeculture','menomore','notallmen','maleprivilege','girlpower',
-    'sexualharassment','consentmatters','consent matter'];
+
+    const keywords = [/gender discrimination/,/sexism/,/gender bias/,/sexual harassment/,/glass ceiling/,
+    /pay gap/,/women's rights/,/feminis/,/gender inequality/,/male privilege/,/woman security/,
+    /women in leadership/,/gender stereotypes/,/gender roles/,/gender-based violence/,/sexual violence/,
+    /misogyny/,/gender issue/,/metoo/,/timesup/,/believewomen/,/toxicMasculinity/,/genderequality/,
+    /equalpay/,/endrapeculture/,/menomore/,/notallmen/,/maleprivilege/,/girlpower/,/sexualharassment/,
+    /consentmatters/,/consent matter/];
+    
     if (doc.content) {
-        var found = {};
-        for (var i = 0; i < keywords.length; i++) {
-            if (doc.content.toLowerCase().includes(keywords[i])) {
-                found[keywords[i]] = true;
-            }
+      var found = {};
+      for (var pattern of keywords) {
+        match = doc.content.toLowerCase().match(pattern);
+        if (match) {
+          found[pattern] = true;
         }
-        if (Object.keys(found).length > 0) {
-            emit('sexism', {total: 1, mentioned:1});
-        } else{
-            emit('sexism', {total: 1, mentioned:0});
-        }
-    } else {
+      }
+      if (Object.keys(found).length > 0) {
+        emit('sexism', {total: 1, mentioned:1});
+      } else{
         emit('sexism', {total: 1, mentioned:0});
+      }
+    } else {
+      emit('sexism', {total: 1, mentioned:0});
     }
 }
 //// Reduce
@@ -73,23 +81,26 @@ function (keys, values, rereduce) {
 // unemployment --- new-view
 //// Map
 function (doc) {
-    var keywords = ['got fired','employ','idle','job loss',' layoff','jobless','redundancy',
-    'furlough','downsizing','out of work','retrenchment','job hunt',
-    'career transition','job market','job search','job seeker','jobkeeper','hiring'];
+
+    const keywords = [/got fired/,/employ/,/idle/,/job loss/,/ layoff/,/jobless/,/redundancy/,/furlough/,
+    /downsizing/,/out of work/,/retrenchment/,/job hunt/,/career transition/,/job market/,/job search/,
+    /job seeker/,/jobkeeper/,/hiring/];
+    
     if (doc.content) {
-        var found = {};
-        for (var i = 0; i < keywords.length; i++) {
-            if (doc.content.toLowerCase().includes(keywords[i])) {
-                found[keywords[i]] = true;
-            }
+      var found = {};
+      for (var pattern of keywords) {
+        match = doc.content.toLowerCase().match(pattern);
+        if (match) {
+          found[pattern] = true;
         }
-        if (Object.keys(found).length > 0) {
-            emit('unemployment', {total: 1, mentioned:1});
-        } else{
-            emit('unemployment', {total: 1, mentioned:0});
-        }
-    } else {
+      }
+      if (Object.keys(found).length > 0) {
+        emit('unemployment', {total: 1, mentioned:1});
+      } else{
         emit('unemployment', {total: 1, mentioned:0});
+      }
+    } else {
+      emit('unemployment', {total: 1, mentioned:0});
     }
 }
 //// Reduce
