@@ -70,39 +70,6 @@ def api_twi_state_total(topic,state):
             break
         
     return {"summary": summary, state: geo[state]}
-    db = server['sudo']
-    view = db.view('agism/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
-    results = []
-    total_sum = 0
-    mentioned_sum = 0
-
-    for row in view:
-        result = {
-            "city": row['key'][1],
-            'total': row['value']['total_people'],
-            'mentioned': row['value']['ageing_population'],
-            'percentage': row['value']['ageing_population_percentage']
-        }
-        total_sum += row['value']['total_people']
-        mentioned_sum += row['value']['ageing_population']
-        results.append(result)
-        
-    summary = {
-        "total": total_sum,
-        "count": mentioned_sum,
-        "percentage": mentioned_sum / total_sum
-    }
-    db_geo = server['geocenter']
-    view = db_geo.view('geocenter/new-view')
-    geo = {}
-
-    for row in view:
-        if row['key'] == state:
-            geo[state] = {'lat': row['value']['lat'], 'lng': row['value']['lng']}
-            break
-        
-    return {"summary": summary, state: geo[state]}
-
 
 #summary of twi server in three topics
 @app.route('/api_twi_total/<topic>')
@@ -219,7 +186,7 @@ def api_page2_twi(state,topic):
 
     rank = []
 
-    db = couch['twitter1']
+    db = server['twitter1']
 
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
@@ -243,7 +210,7 @@ def api_page2_sudo(state,topic):
     return_value['state']['lat'] = all_geo[state]['lat']
     return_value['state']['lng'] = all_geo[state]['lng']
 
-    db = couch['sudo']
+    db = server['sudo']
     
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}])
     results = []
