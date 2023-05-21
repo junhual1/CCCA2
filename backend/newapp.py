@@ -137,34 +137,18 @@ def api_twi_total(topic):
 #get the real-time data from mastodon 
 @app.route('/api_mastodon/<topic>')
 def api_mastodon(topic):
-    db = server['mastodon0']
-
-
-    view = db.view(f'{topic}/new-view')
-
+    result = {'total':0,'mentioned':0,'percentage':0}
+    for database in server:
+        if 'mastodon' in database:
+            db = couch[database]
+            view = db.view(f'{topic}/new-view',group_level = 1)
+            
+            for row in view:
+                result['total'] += row['value']['total']
+                result['mentioned'] +=  row['value']['mentioned']
     
-    data = []
-    for row in view:
-        result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage' : row['value']['mentioned']/row['value']['total']}
-        data.append(result)
-
-    if 'mastodon1' in server:
-        db1 = server['mastodon1']
-        view1 = db1.view(f'{topic}/new-view')
-
-        for row in view1:
-            result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
-            data.append(result)
-
-    if 'mastodon2' in server:
-        db2 = server['mastodon2']
-        view2 = db2.view(f'{topic}/new-view')
-
-        for row in view2:
-            result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
-            data.append(result)
-
-    return {topic: data}
+    result['percentage'] = result['mentioned']/result['total']
+    return result
 
 
 

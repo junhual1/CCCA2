@@ -4,11 +4,20 @@ import couchdb
 # from flask import Flask, render_template, jsonify
 # from flask_cors import CORS
 
+# Define the list of node IPs in the cluster
+cluster_nodes = ["172.26.132.54", "172.26.133.32", "172.26.130.9"]
+
 admin = 'admin'
 password = 'qazwsxedc'
-url = f'http://{admin}:{password}@172.26.132.54:5984/'
 
-couch = couchdb.Server(url)
+# Initialize a CouchDB server object for each node
+node_servers = [f"http://{admin}:{password}@{node_ip}:5984/" for node_ip in cluster_nodes]
+
+for node in node_servers:
+    try:
+        server = couchdb.Server(node)
+    except couchdb.http.Unauthorized:
+        print('Unauthorized access to CouchDB node:', node)
 
 def ranking(lst, lst_diction, type_):
     if type_ == 'Twitter':
@@ -44,7 +53,7 @@ def ranking(lst, lst_diction, type_):
 
 # get all geo locations
 def get_geo():
-    db = couch['geocenter']
+    db = server['geocenter']
     view = db.view('geocenter/new-view')
     results = {}
     for row in view:
@@ -61,7 +70,7 @@ def api_page2_twi(state,topic):
 
     rank = []
 
-    db = couch['twitter1']
+    db = server['twitter1']
 
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
@@ -84,7 +93,7 @@ def api_page2_sudo(state,topic):
     return_value['state']['lat'] = all_geo[state]['lat']
     return_value['state']['lng'] = all_geo[state]['lng']
 
-    db = couch['sudo']
+    db = server['sudo']
     
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}])
     results = []
@@ -114,6 +123,51 @@ def api_page2_sudo(state,topic):
 
 print(api_page2_twi('victoria','agism'))
 print(api_page2_sudo('victoria','agism'))
+
+
+
+
+def api_mastodon(topic):
+    result = {'total':0,'mentioned':0,'percentage':0}
+    for database in server:
+        if 'mastodon' in database:
+            db = server[database]
+            view = db.view(f'{topic}/new-view',group_level = 1)
+            
+            for row in view:
+                result['total'] += row['value']['total']
+                result['mentioned'] +=  row['value']['mentioned']
+    
+    result['percentage'] = result['mentioned']/result['total']
+    return result
+
+    
+print(api_mastodon('agism'))
+    # data = []
+    # for row in view:
+    #     result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage' : row['value']['mentioned']/row['value']['total']}
+    #     data.append(result)
+
+    # if 'mastodon1' in server:
+    #     db1 = server['mastodon1']
+    #     view1 = db1.view(f'{topic}/new-view')
+
+    #     for row in view1:
+    #         result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
+    #         data.append(result)
+
+    # if 'mastodon2' in server:
+    #     db2 = server['mastodon2']
+    #     view2 = db2.view(f'{topic}/new-view')
+
+    #     for row in view2:
+    #         result = {'total': row['value']['total'], 'mentioned': row['value']['mentioned'], 'percentage': row['value']['mentioned'] / row['value']['total']}
+    #         data.append(result)
+
+    # return result
+
+
+
 # #pt2
 # #get geo location of state parm 
 # # @app.route('/api_geo/<state>')
