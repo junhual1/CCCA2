@@ -107,7 +107,7 @@ def api_mastodon(topic):
     result = {'total':0,'mentioned':0,'percentage':0}
     for database in server:
         if 'mastodon' in database:
-            db = couch[database]
+            db = server[database]
             view = db.view(f'{topic}/new-view',group_level = 1)
             
             for row in view:
@@ -242,7 +242,6 @@ def api_page2_sudo(state,topic):
 
 
 #get all citys of agism by state with geo for sudo
-
 @app.route('/api_sudo_agism_state_city/<state>')
 def api_sudo_agism_state_city(state):
     db = server['sudo']
