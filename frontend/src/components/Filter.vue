@@ -6,38 +6,28 @@
     <div class="filterSelect">
         <span class="filterScenario">Scenario: </span>
         <select v-model="select1">
-            <option value="Employment">Employment</option>
-            <option value="Agism">Agism</option>
-            <option value="Sexism">Sexism</option>
+            <option value="unemployment-unemployment">Employment</option>
+            <option value="agism-agism">Agism</option>
+            <option value="sexism-sexism">Sexism</option>
         </select>
     </div>
     <div class="feature">
-        <!-- <div class="feature1">
-            <span>Feature 1: </span>
-            <select v-model="select2">
-                <option value="feature1">feature1</option>
-                <option value="feature2">feature2</option>
-                <option value="feature3">feature3</option>
-            </select>
-        </div> -->
-        <!-- <div class="feature2"> -->
         <span>State: </span>
-        <select v-model="select3">
-            <option value="VIC">VIC</option>
-            <option value="NSW">NSW</option>
-            <option value="QLD">QLD</option>
-            <option value="QLD">SA</option>
-            <option value="QLD">WA</option>
-            <option value="QLD">TAS</option>
-            <option value="QLD">ACT</option>
-            <option value="QLD">NT</option>
+        <select v-model="select2">
+            <option value="newsouthwales">NSW</option>
+            <option value="victoria">VIC</option>
+            <option value="queensland">QLD</option>
+            <option value="southaustralia">SA</option>
+            <option value="westernaustralia">WA</option>
+            <option value="tasmania">TAS</option>
+            <option value="australiancapitalterritory">ACT</option>
+            <option value="northernterritory">NT</option>
+            <option value="offshoreterritories">OT</option>
         </select>
-        <!-- </div> -->
     </div>
     <div class="submit">
         <button @click="search">Search</button>
     </div>
-    <!-- <button class="close">X</button> -->
   </div>
   
   
@@ -48,15 +38,13 @@ export default {
     data() {
         return {
             select1: null,
-            // select2: null,
-            select3: null
+            select2: null
         }
     },
     methods: {
         search() {
             const scenario = this.select1
-            // const feature = this.select2
-            const state = this.select3
+            const state = this.select2
             this.$router.push({ name: 'results', params: { scenario: scenario, state: state } })
         }
     }

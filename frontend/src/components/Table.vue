@@ -2,6 +2,7 @@
     <div>
       <div>
         <table v-if="keyword === 'employment' && showTable">
+          <caption>Comparison Between Mastodon and Twitter About Employment Topic</caption>
           <thead>
           <tr>
               <th></th>
@@ -27,6 +28,7 @@
         </table>
 
         <table v-else-if="keyword === 'agism' && showTable">
+          <caption>Comparison Between Mastodon and Twitter About Agism Topic</caption>
           <thead>
           <tr>
               <th></th>
@@ -52,6 +54,7 @@
         </table>
 
         <table v-else-if="keyword === 'sexism' && showTable">
+          <caption>Comparison Between Mastodon and Twitter About Sexism Topic</caption>
           <thead>
           <tr>
               <th></th>
@@ -119,24 +122,24 @@ export default {
   mounted() {
 
     Promise.all([
-      axios.get('http://172.26.133.154:5984/api_mastodon/unemployment'),
-      axios.get('http://172.26.133.154:5984/api_mastodon/agism'),
-      axios.get('http://172.26.133.154:5984/api_mastodon/sexism'),
+      axios.get('http://172.26.133.154:5000/api_mastodon/unemployment'),
+      axios.get('http://172.26.133.154:5000/api_mastodon/agism'),
+      axios.get('http://172.26.133.154:5000/api_mastodon/sexism'),
 
-      axios.get('http://172.26.133.154:5984/api_twi_total/unemployment'),
-      axios.get('http://172.26.133.154:5984/api_twi_total/agism'),
-      axios.get('http://172.26.133.154:5984/api_twi_total/sexism')
+      axios.get('http://172.26.133.154:5000/api_twi_total/unemployment'),
+      axios.get('http://172.26.133.154:5000/api_twi_total/agism'),
+      axios.get('http://172.26.133.154:5000/api_twi_total/sexism')
     ])
       .then(responses => {
-        this.masEmploymentMentioned = responses[0].data.unemployment[0].mentioned;
-        this.masEmploymentTotal = responses[0].data.unemployment[0].total;
-        this.masEmploymentPercentage = responses[0].data.unemployment[0].percentage.toFixed(3);
-        this.masAgismMentioned = responses[1].data.agism[0].mentioned;
-        this.masAgismTotal = responses[1].data.agism[0].total;
-        this.masAgismPercentage = responses[1].data.agism[0].percentage.toFixed(3);
-        this.masSexismMentioned = responses[2].data.sexism[0].mentioned;
-        this.masSexismTotal = responses[2].data.sexism[0].total;
-        this.masSexismPercentage = responses[2].data.sexism[0].percentage.toFixed(3);
+        this.masEmploymentMentioned = responses[0].data.mentioned;
+        this.masEmploymentTotal = responses[0].data.total;
+        this.masEmploymentPercentage = responses[0].data.percentage.toFixed(3);
+        this.masAgismMentioned = responses[1].data.mentioned;
+        this.masAgismTotal = responses[1].data.total;
+        this.masAgismPercentage = responses[1].data.percentage.toFixed(3);
+        this.masSexismMentioned = responses[2].data.mentioned;
+        this.masSexismTotal = responses[2].data.total;
+        this.masSexismPercentage = responses[2].data.percentage.toFixed(3);
 
         this.twiEmploymentCount = responses[3].data.summary.count;
         this.twiEmploymentTotal = responses[3].data.summary.total;
@@ -154,3 +157,21 @@ export default {
   }
 };
 </script>
+
+<style>
+  table {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    border-collapse: collapse;
+  }
+  th {
+    border: 1px solid black;
+    padding: 8px;
+  }
+  td {
+    border: 1px solid black;
+    padding: 8px;
+  }
+</style>

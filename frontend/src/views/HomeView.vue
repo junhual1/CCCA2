@@ -1,11 +1,11 @@
 <template>
   <div>
     <div class="home">
-      <h1>Home Page</h1>
+      <h1>Relationship Between Unemployment and Social Bias</h1>
     </div>
     <div>
       <div class="listScenario">
-        <Test @toggle-table="toggleTable" />
+        <Test />
       </div>
       <button @click="showFilter" class="compare">
         <div class="comparison">
@@ -25,14 +25,15 @@
       </div>
     </div>
 
-    <div class="mastodon-chart">
+
+
+    <!-- <div class="mastodon-chart">
       <MChart :showChart="displayChart" />
     </div>
 
     <div class="table">
-      <!-- <Test @toggle-table="toggleTable" /> -->
       <Table :showTable="displayTable" />
-    </div>
+    </div> -->
 
   </div>
 
@@ -77,9 +78,9 @@ export default {
   .home h1 {
     display: inline-block;
     font-family: arial;
-    font-size: 20px;
+    font-size: 24px;
     color: #000000;
-    width: 200px;
+    width: 100%;
   }
   .select {
     display: inline-block;
@@ -182,19 +183,5 @@ export default {
     z-index: 1;
   }
 
-  .table {
-    position: absolute;
-    border-collapse: collapse;
-    top: 23%;
-    left: 2%;
-    z-index: 1;
-  }
-  .table th {
-    border: 1px solid black;
-    padding: 8px;
-  }
-  .table td {
-    border: 1px solid black;
-    padding: 8px;
-  }
+
 </style>

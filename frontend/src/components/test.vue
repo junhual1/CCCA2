@@ -1,9 +1,10 @@
 <template>
   <div>
-    <!-- <div>
-      {{ this.test }}
-    </div> -->
-    <Table :keyword="keyword" :showTable="showTable"></Table>
+    <div class="graph">
+      <Table :keyword="keyword" :showTable="showTable" ></Table>
+      <MChart :keyword="keyword" :showChart="showChart" ></MChart>
+    </div>
+
     <div id="map" style="height: 82%"></div>
     <div class="scenario">
       <button :style="{ backgroundColor: buttonColor1 }" @click="onKeywordClick('employment')">Employment</button>
@@ -35,7 +36,7 @@ export default {
       current_scenario: null,
       keywordTweets: null,
       showTable: false,
-      showChart: false,
+      showChart: true,
 
       twi_nsw: null,
       twi_vic: null,
@@ -45,6 +46,7 @@ export default {
       twi_tas: null,
       twi_act: null,
       twi_nt: null,
+      twi_ot: null,
 
       employment: [],
       agism: [],
@@ -54,32 +56,35 @@ export default {
   mounted() {
     this.initMap();
     Promise.all([
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/new%20south%20wales'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/victoria'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/queensland'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/south%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/western%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/tasmania'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/australian%20capital%20territory'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/northern%20territory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/newsouthwales'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/victoria'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/queensland'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/southaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/westernaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/tasmania'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/australiancapitalterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/northernterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/offshoreterritories'),
 
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/new%20south%20wales'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/victoria'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/queensland'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/south%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/western%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/tasmania'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/australian%20capital%20territory'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/northern%20territory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/newsouthwales'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/victoria'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/queensland'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/southaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/westernaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/tasmania'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/australiancapitalterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/northernterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/offshoreterritories'),
 
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/new%20south%20wales'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/victoria'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/queensland'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/south%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/western%20australia'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/tasmania'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/australian%20capital%20territory'),
-      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/northern%20territory')
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/newsouthwales'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/victoria'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/queensland'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/southaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/westernaustralia'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/tasmania'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/australiancapitalterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/northernterritory'),
+      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/offshoreterritories')
     ])
       .then(responses => {
         this.twi_nsw = { ...responses[0].data['new south wales'], ...responses[0].data['summary']};
@@ -98,40 +103,46 @@ export default {
         this.employment.push(this.twi_act)
         this.twi_nt = { ...responses[7].data['northern territory'], ...responses[7].data['summary']};
         this.employment.push(this.twi_nt)
+        this.twi_ot = { ...responses[8].data['offshore territories'], ...responses[8].data['summary']};
+        this.employment.push(this.twi_ot)
 
-        this.twi_nsw = { ...responses[8].data['new south wales'], ...responses[8].data['summary']};
+        this.twi_nsw = { ...responses[9].data['new south wales'], ...responses[9].data['summary']};
         this.agism.push(this.twi_nsw)
-        this.twi_vic = { ...responses[9].data['victoria'], ...responses[9].data['summary']};
+        this.twi_vic = { ...responses[10].data['victoria'], ...responses[10].data['summary']};
         this.agism.push(this.twi_vic)
-        this.twi_qld = { ...responses[10].data['queensland'], ...responses[10].data['summary']};
+        this.twi_qld = { ...responses[11].data['queensland'], ...responses[11].data['summary']};
         this.agism.push(this.twi_qld)
-        this.twi_sa = { ...responses[11].data['south australia'], ...responses[11].data['summary']};
+        this.twi_sa = { ...responses[12].data['south australia'], ...responses[12].data['summary']};
         this.agism.push(this.twi_sa)
-        this.twi_wa = { ...responses[12].data['western australia'], ...responses[12].data['summary']};
+        this.twi_wa = { ...responses[13].data['western australia'], ...responses[13].data['summary']};
         this.agism.push(this.twi_wa)
-        this.twi_tas = { ...responses[13].data['tasmania'], ...responses[13].data['summary']};
+        this.twi_tas = { ...responses[14].data['tasmania'], ...responses[14].data['summary']};
         this.agism.push(this.twi_tas)
-        this.twi_act = { ...responses[14].data['australian capital territory'], ...responses[14].data['summary']};
+        this.twi_act = { ...responses[15].data['australian capital territory'], ...responses[15].data['summary']};
         this.agism.push(this.twi_act)
-        this.twi_nt = { ...responses[15].data['northern territory'], ...responses[15].data['summary']};
+        this.twi_nt = { ...responses[16].data['northern territory'], ...responses[16].data['summary']};
         this.agism.push(this.twi_nt)
+        this.twi_ot = { ...responses[17].data['offshore territories'], ...responses[17].data['summary']};
+        this.agism.push(this.twi_ot)
 
-        this.twi_nsw = { ...responses[16].data['new south wales'], ...responses[16].data['summary']};
+        this.twi_nsw = { ...responses[18].data['new south wales'], ...responses[18].data['summary']};
         this.sexism.push(this.twi_nsw)
-        this.twi_vic = { ...responses[17].data['victoria'], ...responses[17].data['summary']};
+        this.twi_vic = { ...responses[19].data['victoria'], ...responses[19].data['summary']};
         this.sexism.push(this.twi_vic)
-        this.twi_qld = { ...responses[18].data['queensland'], ...responses[18].data['summary']};
+        this.twi_qld = { ...responses[20].data['queensland'], ...responses[20].data['summary']};
         this.sexism.push(this.twi_qld)
-        this.twi_sa = { ...responses[19].data['south australia'], ...responses[19].data['summary']};
+        this.twi_sa = { ...responses[21].data['south australia'], ...responses[21].data['summary']};
         this.sexism.push(this.twi_sa)
-        this.twi_wa = { ...responses[20].data['western australia'], ...responses[20].data['summary']};
+        this.twi_wa = { ...responses[22].data['western australia'], ...responses[22].data['summary']};
         this.sexism.push(this.twi_wa)
-        this.twi_tas = { ...responses[21].data['tasmania'], ...responses[21].data['summary']};
+        this.twi_tas = { ...responses[23].data['tasmania'], ...responses[23].data['summary']};
         this.sexism.push(this.twi_tas)
-        this.twi_act = { ...responses[22].data['australian capital territory'], ...responses[22].data['summary']};
+        this.twi_act = { ...responses[24].data['australian capital territory'], ...responses[24].data['summary']};
         this.sexism.push(this.twi_act)
-        this.twi_nt = { ...responses[23].data['northern territory'], ...responses[23].data['summary']};
+        this.twi_nt = { ...responses[25].data['northern territory'], ...responses[25].data['summary']};
         this.sexism.push(this.twi_nt)
+        this.twi_ot = { ...responses[26].data['offshore territories'], ...responses[26].data['summary']};
+        this.sexism.push(this.twi_ot)
       })
       .catch(error => {
         console.error(error);
@@ -194,11 +205,13 @@ export default {
     },
     onKeywordClick(keyword) {
       this.updateKeyword(keyword)
+      
       this.clearButtonColor();
       
       if (this.keyword !== this.current_scenario) {
         this.clearCircles();
         this.showTable = true;
+        // this.displayChart()
         this.createCircles();
         this.current_scenario = this.keyword;
       }
@@ -208,7 +221,7 @@ export default {
         this.current_scenario = null
       }
 
-      this.$emit('toggle-table');
+      // this.$emit('toggle-table');
 
       // this.$emit('variable-updated', this.keyword);
     },
@@ -217,6 +230,9 @@ export default {
     },
     displayTable() {
       this.showTable = !this.showTable
+    },
+    displayChart() {
+      this.showChart = !this.showChart
     },
     clearCircles() {
       this.circles.forEach(circle => {
@@ -227,8 +243,10 @@ export default {
     changeButtonColor1() {
       if (this.buttonColor1 === 'white') {
         this.buttonColor1 = 'grey';
+        // this.showChart = false
       } else {
         this.buttonColor1 = 'white'
+        // this.showChart = true
       }
     },
     changeButtonColor2() {
@@ -284,5 +302,11 @@ export default {
 .scenario button:hover {
   cursor: pointer;
   background: #eee;
+}
+.graph {
+  position: absolute;
+  z-index: 2;
+  left: 3%;
+  bottom: 5%;
 }
 </style>
