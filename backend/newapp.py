@@ -551,7 +551,7 @@ def api_page2_sudo(state,topic):
             rank.append([row['value']["employment_rate"],row['key'][1]])
     else:
         for row in view:
-            result = {"city": row['key'][1],'count': row['value']["gender_difference"],'percentage': row['value']["gender_ratio"],
+            result = {"city": row['key'][1],'population': row['value']["gender_difference"], 'percentage': row['value']["gender_ratio"],
             'lat': all_geo[row['key'][1]]['lat'], 'lng': all_geo[row['key'][1]]['lng']}
             results.append(result)
             rank.append([row['value']["gender_ratio"],row['key'][1]])
