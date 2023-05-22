@@ -14,12 +14,6 @@ const routes = [
     name: 'results',
     component: Results
   }
-  // {
-  //   path: '/:scenario/:feature/:state',
-  //   name: 'map',
-  //   component: GoogleMap,
-  //   props: route => ({ data: route.params.data })
-  // }
 ]
 
 const router = createRouter({

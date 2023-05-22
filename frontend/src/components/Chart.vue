@@ -1,85 +1,211 @@
 <template>
-  <div>
-    <div class="chart">
-      <canvas id="myChart" style="width: 400px; height: 300px;"></canvas>
-    </div>
-  </div>
+  <div id="chart" style="width: 1000px; height: 400px;"></div>
 </template>
 
 <script>
 import axios from 'axios';
-import Chart from 'chart.js/auto';
+import * as echarts from 'echarts';
+import 'echarts/lib/chart/bar';
+import 'echarts/lib/chart/line';
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/toolbox';
+import 'echarts/lib/component/legend';
+import 'echarts/lib/component/title';
 
 export default {
   data() {
     return {
-      mastodonEmployment: null,
-      mastodonAgism: null,
-      mastodonSexism: null,
+      twi_data: null,
+      sudo_data: null,
+      twi_perc: [],
+      sudo_perc: [],
+      twi_city: [],
+      sudo_city: [],
+      twi_max_perc: null,
+      sudo_max_perc: null,
+      twi_rank: [],
+      sudo_rank: [],
+      twi_color: [],
+      sudo_color: [],
+      chart_title: null
     }
   },
-  mounted() {
-    Promise.all([
-      axios.get('http://172.26.133.154:5000/api_mastodon/unemployment'),
-      axios.get('http://172.26.133.154:5000/api_mastodon/agism'),
-      axios.get('http://172.26.133.154:5000/api_mastodon/sexism')
-    ])
-      .then(responses => {
-        this.mastodonEmployment = responses[0].data;
-        this.mastodonAgism = responses[1].data;
-        this.mastodonSexism = responses[2].data;
-        this.createBarChart();
+  async mounted() {
+    const twi_scenario = this.$route.params.scenario.split('-')[0];
+    const sudo_scenario = this.$route.params.scenario.split('-')[1];
+    const state = this.$route.params.state;
+
+    // console.log(twi_scenario)
+    // console.log(sudo_scenario)
+    // console.log(state)
+
+    if (twi_scenario === 'unemployment' && sudo_scenario === 'unemployment') {
+      this.chart_title = 'Comparison of employment topic engagement and employment rate'
+    } else if (twi_scenario === 'unemployment' && sudo_scenario === 'agism') {
+      this.chart_title = 'Comparison of employment topic engagement and ageing population percentage'
+    } else if (twi_scenario === 'unemployment' && sudo_scenario === 'sexism') {
+      this.chart_title = 'Comparison of employment topic engagement and gender ratio'
+    } else if (twi_scenario === 'agism' && sudo_scenario === 'agism') {
+      this.chart_title = 'Comparison of agesim topic engagement and ageing population percentage'
+    } else if (twi_scenario === 'sexism' && sudo_scenario === 'sexism') {
+      this.chart_title = 'Camparison of sexism topic engagement and gender ratio'
+    } 
+
+    try {
+      const twiResponse = await axios.get(`http://127.0.0.1:5000/api_twi_state_city/${twi_scenario}/${state}`);
+      this.twi_data = twiResponse.data.results;
+      this.twi_data.forEach(twi => {
+        this.twi_city.push(twi.city)
+        this.twi_perc.push(twi.percentage.toFixed(5))
+        this.twi_rank.push(twi.rank)
       })
-      .catch(error => {
-        console.error(error);
-      });
-  },
-  methods: {
-    createBarChart() {
-      if (this.mastodonAgism) {
-        const ctx = document.getElementById('myChart').getContext('2d');
-        new Chart(ctx, {
-          type: 'bar',
-          data: {
-            labels: ['Employment', 'Agism', 'Sexism'],
-            datasets: [
-              {
-                label: 'Mentioned',
-                data: [this.mastodonEmployment.mentioned, this.mastodonAgism.mentioned, this.mastodonSexism.mentioned],
-                backgroundColor: 'rgba(0, 0, 0, 0.4)',
-                borderColor: 'rgba(0, 0, 0, 1)',
-                borderWidth: 1,
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                beginAtZero: true,
-              },
-            },
-            plugins: {
-              title: {
-                display: true,
-                text: 'Number of mentions of each topic on Mastodon',
-              },
-            },
-          },
-        });
-      }
+
+      this.twi_rank.forEach(rank => {
+        if ((state !== 'australiancapitalterritory') && (state !== 'northernterritory') && (state !== 'offshoreterritories')) {
+          if (rank === 1) {
+            this.twi_color.push('#ff6347')
+          } else if (rank === -1) {
+            this.twi_color.push('#1e90ff')
+          } else {
+            this.twi_color.push('#696969')
+          }
+        } else {
+          this.twi_color.push('#696969')
+        }
+      })
+      
+      // this.twi_rank.forEach(rank => {
+      //   if (rank === 0) {
+      //     this.twi_color.push('#696969')
+      //   } else if (rank === 1) {
+      //     this.twi_color.push('#ff6347')
+      //   } else if (rank === -1) {
+      //     this.twi_color.push('#1e90ff')
+      //   }
+      // })
+      // console.log(this.twi_color)
+      this.twi_max_perc = Math.max(...this.twi_perc) * 1.15
+    } catch (error) {
+      console.error('Failed to fetch Twitter data:', error);
     }
 
+    try {
+      const sudoResponse = await axios.get(`http://127.0.0.1:5000/api_sudo_state_city/${sudo_scenario}/${state}`);
+      this.sudo_data = sudoResponse.data.results;
+      this.sudo_data.forEach(sudo => {
+        this.sudo_city.push(sudo.city)
+        this.sudo_perc.push(sudo.percentage.toFixed(3))
+        this.sudo_rank.push(sudo.rank)
+      })
+      this.sudo_rank.forEach(rank => {
+        if (rank === 0) {
+          this.sudo_color.push('#c0c0c0')
+        } else if (rank === 1) {
+          this.sudo_color.push('#c0c0c0')
+        } else if (rank === -1) {
+          this.sudo_color.push('#c0c0c0')
+        }
+      })
+      this.sudo_max_perc = Math.max(...this.sudo_perc) * 1.15
+    } catch (error) {
+      console.error('Failed to fetch Sudo data:', error);
+    }
+
+    this.initChart();
+  },
+  methods: {
+    initChart() {
+      const chartDom = document.getElementById('chart');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        title: {
+          text: this.chart_title,
+          textStyle: {
+            fontSize: 16,
+            fontWeight: 'bold',
+            // color: 'blue'
+          },
+          left: 'center',
+          top: 'top'
+        },
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: this.twi_city,
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLabel: {
+              rotate: -45
+            }
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            name: 'Twitter',
+            min: 0,
+            max: this.twi_max_perc,
+            interval: this.twi_max_perc/10,
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          },
+          {
+            type: 'value',
+            name: 'Sudo',
+            min: 0,
+            max: this.sudo_max_perc,
+            interval: this.sudo_max_perc/10,
+            axisLabel: {
+              formatter: '{value} %'
+            }
+          }
+          
+        ],
+        series: [
+          {
+            name: 'Twitter',
+            type: 'bar',
+            itemStyle: {
+              color: (params) => {
+                return this.twi_color[params.dataIndex];
+              }
+            },
+            tooltip: {
+              formatter: '{c} %'
+            },
+            data: this.twi_perc
+          },
+          {
+            name: 'Sudo',
+            type: 'bar',
+            yAxisIndex: 1,
+            itemStyle: {
+              color: (params) => {
+                return this.sudo_color[params.dataIndex];
+              }
+            },
+            tooltip: {
+              formatter: '{c} %'
+            },
+            data: this.sudo_perc
+          }
+        ]
+      };
+        // Your chart options here
+      
+      myChart.setOption(option);
+    }
   }
 }
 </script>
-
-<style>
-.chart {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 10%;
-    z-index: 1;
-}
-</style>

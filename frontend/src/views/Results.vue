@@ -2,13 +2,32 @@
   <div>
     <div class="menu">
       <div class="current">      
-        <span>Current Scenario: {{ $route.params.scenario }}</span>
+        <span v-if="this.twi_scenario === 'unemployment'">Main Scenario: <br>Employment Discussion Rate</span>
+        <span v-if="this.twi_scenario === 'agism'">Main Scenario: <br>Agism Discussion Rate<br></span>
+        <span v-if="this.twi_scenario === 'sexism'">Main Scenario: <br>Sexism Discussion Rate<br></span>
+        <br>
+        <span v-if="this.sudo_scenario === 'unemployment'">Compared Scenario: <br>Official Employment Rate</span>
+        <span v-if="this.sudo_scenario === 'agism'">Compared Scenario: <br>Official Aging Percentage</span>
+        <span v-if="this.sudo_scenario === 'sexism'">Compared Scenario: <br>Official Gender Ratio</span>
+        <br>
         <!-- <span>Current Sudo Scenario: {{ $route.params.sudo_scenario }}</span> -->
         <!-- <span v-else>Current Scenario: {{ scenario }}</span> -->
-        <span>Current Location: {{ $route.params.state }}</span>
+        <span v-if="this.location === 'newsouthwales'">Current Location: <br>New South Wales</span>
+        <span v-if="this.location === 'victoria'">Current Location: <br>Victoria</span>
+        <span v-if="this.location === 'queensland'">Current Location: <br>Queensland</span>
+        <span v-if="this.location === 'southaustralia'">Current Location: <br>South Australia</span>
+        <span v-if="this.location === 'westernaustralia'">Current Location: <br>Western Australia</span>
+        <span v-if="this.location === 'tasmania'">Current Location: <br>Tasmania</span>
+        <span v-if="this.location === 'australiancapitalterritory'">Current Location: <br>Australian Capital Territory</span>
+        <span v-if="this.location === 'northernterritory'">Current Location: <br>Northern Territory</span>
+        <span v-if="this.location === 'offshoreterritories'">Current Location: <br>Offshore Territories</span>
         <!-- <span v-else>Current Location: {{ location }}</span> -->
       </div>
-      <div class="choose">
+
+      <div class="back">
+        <button @click="goBack">Back</button>
+      </div>
+      <!-- <div class="choose">
         <span class="title">Change Main Topics</span>
         <div class="dropdown">
           <button class="dropdown-toggle" @click="toggleDropdown1">
@@ -71,9 +90,10 @@
         </div>
         
         <div class="confirm">
-          <button @click="confirm">Confirm</button>
-        </div>
-      </div>
+          <span v-if="!this.sudo_scenario">Please choose a scenario!</span>
+          <button @click="confirm" :disabled="!this.sudo_scenario">Confirm</button>
+        </div> -->
+      <!-- </div> -->
     </div>
     <div class="map1">
       <h3>Data from Twitter</h3>
@@ -92,31 +112,33 @@
       />
     </div> -->
     <!-- <Chart /> -->
-    <!-- <div class="dynamic-chart">
+    <div class="dynamic-chart">
       <Chart />
-    </div> -->
-    <div class="graph2">
-      <Graph />
     </div>
+
+
+    <!-- <div class="graph2">
+      <Graph />
+    </div> -->
 
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-// import Chart from '../components/Chart.vue'
-import Graph from '../components/Graph.vue'
+import Chart from '../components/Chart.vue'
 
 export default {
   name: 'Result',
-  components: { Graph },
+  components: { Chart },
 
   data() {
     return {
-        array: null,
+        zoom_size: null,
 
         twi_scenario: null,
         sudo_scenario: null,
+        scenario: null,
         location: null,
         isDropdownOpen1: false,
         isDropdownOpen2: false,
@@ -132,217 +154,145 @@ export default {
         center: null,
         twi_data: null,
         sudo_data: null,
+
+        twi_percentage: [],
+
+        twi_max: null,
+        twi_min: null,
+        sudo_max: null,
+        sudo_min: null,
+
+        twi_color: null,
+        plot_radius: null
     };
   },
-  mounted() {
-    const twi_scenario = this.$route.params.scenario.split('-')[0];
-    const sudo_scenario = this.$route.params.scenario.split('-')[1];
-    const state = this.$route.params.state;
-
-
-    let twiDataPromise = null;
-    let sudoDataPromise = null;
-
-    // if (!this.scenario)
-    twiDataPromise = axios.get(`http://172.26.133.154:5000/api_twi_state_city/${twi_scenario}/${state}`)
-      .then(response => {
-        this.center = response.data.state;
-        this.twi_data = response.data.results;
-      })
-      .catch(error => {
-        console.error('Failed to fetch Twitter data:', error);
-      });
-    // } else {
-    //   twiDataPromise = axios.get(`http://172.26.133.154:5000/api_twi_state_city/${this.scenario}/${this.state}`)
-    //     .then(response => {
-    //       this.center = response.data.state;
-    //       this.twi_data = response.data.results;
-    //     })
-    //     .catch(error => {
-    //       console.error('Failed to fetch Twitter data:', error);
-    //     });
-    // }
-
-    // console.log(twi_scenario)
-    // console.log(sudo_scenario)
-    // console.log(state)
-    // if (!this.scenario) {
-    sudoDataPromise = axios.get(`http://172.26.133.154:5000/api_sudo_state_city/${sudo_scenario}/${state}`)
-      .then(response => {
-        this.sudo_data = response.data.results;
-        // this.sudo_data.forEach(sudo => {
-        //   console.log(sudo.lat)
-        //   console.log(sudo.lng)
-        // })
-      })
-      .catch(error => {
-        console.error('Failed to fetch Sudo data:', error);
-      });
-    // } else {
-    //   sudoDataPromise = axios.get(`http://172.26.133.154:5000/api_sudo_state_city/${this.scenario}/${this.state}`)
-    //     .then(response => {
-    //       this.sudo_data = response.data.results;
-    //     })
-    //     .catch(error => {
-    //       console.error('Failed to fetch Sudo data:', error);
-    //     });
-    // }
-
-    Promise.all([twiDataPromise, sudoDataPromise])
-      .then(() => {
-        this.initMap();
-        this.createCircles();
-      })
-      .catch(error => {
-        console.error('Failed to fetch data:', error);
-      });
-
+  created() {
+    this.scenario = this.$route.params.scenario;
+    this.twi_scenario = this.scenario.split('-')[0]
+    this.sudo_scenario = this.scenario.split('-')[1]
+    this.location = this.$route.params.state;
   },
+  watch: {
+    "$route.params.state": function(newValue) {
+      this.location = newValue;
+    }
+  },
+  async mounted() {
+    // console.log(this.scenario)
+    // console.log(this.twi_scenario)
+    // console.log(this.sudo_scenario)
+    // console.log(this.location)
+    // const twi_scenario = this.$route.params.scenario.split('-')[0];
+    // const sudo_scenario = this.$route.params.scenario.split('-')[1];
+    // const state = this.$route.params.state;
 
-  // mounted() {
-  //   const scenario = this.$route.params.scenario;
-  //   const state = this.$route.params.state
-  //   if (!this.scenario) {
-  //     const twiDataPromise = axios.get(`http://172.26.133.154:5000/api_twi_state_city/${scenario}/${state}`)
-  //       .then(response => {
-  //         this.center = response.data.state;
-  //         this.twi_data = response.data.results;
-  //       })
-  //       .catch(error => {
-  //         console.error('Failed to fetch Twitter data:', error);
-  //       });
-  //   } else {
-  //     const twiDataPromise = axios.get(`http://172.26.133.154:5000/api_twi_state_city/${this.scenario}/${this.state}`)
-  //       .then(response => {
-  //         this.center = response.data.state;
-  //         this.twi_data = response.data.results;
-  //       })
-  //       .catch(error => {
-  //         console.error('Failed to fetch Twitter data:', error);
-  //       });
-  //   }
-    
-  //   // const twiDataPromise = axios.get('http://172.26.133.154:5000/api_twi_state_city/agism/victoria')
-      
-  //   if (!this.scenario) {
-  //     const sudoDataPromise = axios.get(`http://172.26.133.154:5000/api_sudo_state_city/${scenario}/${state}`)
-  //     // const sudoDataPromise = axios.get('http://172.26.133.154:5000/api_sudo_state_city/agism/victoria')
-  //       .then(response => {
-  //         this.sudo_data = response.data.results;
-  //       })
-  //       .catch(error => {
-  //         console.error('Failed to fetch Sudo data:', error);
-  //       });
-  //   } else {
-  //     const sudoDataPromise = axios.get(`http://172.26.133.154:5000/api_sudo_state_city/${this.scenario}/${this.state}`)
-  //     // const sudoDataPromise = axios.get('http://172.26.133.154:5000/api_sudo_state_city/agism/victoria')
-  //       .then(response => {
-  //         this.sudo_data = response.data.results;
-  //       })
-  //       .catch(error => {
-  //         console.error('Failed to fetch Sudo data:', error);
-  //       });
-  //   }
-    
-  //   Promise.all([twiDataPromise, sudoDataPromise])
-  //     .then(() => {
-  //       // console.log('Data fetched successfully');
-  //       this.initMap();
-  //       this.createCircles();
-  //     })
-  //     .catch(error => {
-  //       console.error('Failed to fetch data:', error);
-  //     });
-  
+    try {
+      const twiResponse = await axios.get(`http://127.0.0.1:5000/api_twi_state_city/${this.twi_scenario}/${this.location}`);
+      this.center = twiResponse.data.state;
+      this.twi_data = twiResponse.data.results;
+      this.twi_data.forEach(twi => {
+        this.twi_percentage.push(twi.percentage)
+      })
+      this.twi_max = Math.max(...this.twi_percentage)
+      this.twi_min = Math.min(...this.twi_percentage)
+    } catch (error) {
+      console.error('Failed to fetch Twitter data:', error);
+    }
 
-    // Promise.all([
-    //   axios.get(`http://172.26.133.154:5000/api_twi_state_city/agism/victoria`),
-    //   axios.get(`http://172.26.133.154:5000/api_sudo_state_city/agism/victoria`),
-    //   // axios.get(`http://172.26.133.154:5000/api_twi_state_city/${this.scenario}/${this.location}`),
+    try {
+      const sudoResponse = await axios.get(`http://127.0.0.1:5000/api_sudo_state_city/${this.sudo_scenario}/${this.location}`);
+      this.sudo_data = sudoResponse.data.results;
+      this.sudo_max = this.sudo_data[0].percentage
+      this.sudo_min = this.sudo_data[this.sudo_data.length-1].percentage
+    } catch (error) {
+      console.error('Failed to fetch Sudo data:', error);
+    }
 
-    // ])
-    //   .then(responses => {
-    //     this.center = responses[0].data.state
-    //     this.twi_data = responses[0].data.results
-    //     this.sudo_data = responses[1].data.results
-    //     // this.array = Object.values(this.twi_data)
-
-    //     console.log(this.center)
-    //     console.log(this.twi_data === null)
-    //     // this.twi_data.forEach(tweet => {
-    //     //   console.log(tweet)
-    //     // })
-    //     // console.log(typeof this.twi_data)
-
-    //   })
-    //   .catch(error => {
-    //     console.error(error);
-    //   });
-    // console.log('1')
-    // this.initMap()
-    // this.createCircles()
-  // },
+    this.initMap();
+    this.createCircles();
+  },
   methods: {
-    toggleDropdown1() {
-      this.twi_scenario = "unemployment"
-      this.isDropdownOpen1 = !this.isDropdownOpen1;
+    goBack() {
+      this.$router.push('/')
     },
-    toggleDropdown2() {
-      this.twi_scenario = "agism"
-      this.isDropdownOpen2 = !this.isDropdownOpen2;
-    },
-    toggleDropdown3() {
-      this.twi_scenario = "sexism"
-      this.isDropdownOpen3 = !this.isDropdownOpen3;
-    },
+    // toggleDropdown1() {
+    //   this.twi_scenario = "unemployment"
+    //   this.isDropdownOpen1 = !this.isDropdownOpen1;
+    // },
+    // toggleDropdown2() {
+    //   this.twi_scenario = "agism"
+    //   this.isDropdownOpen2 = !this.isDropdownOpen2;
+    // },
+    // toggleDropdown3() {
+    //   this.twi_scenario = "sexism"
+    //   this.isDropdownOpen3 = !this.isDropdownOpen3;
+    // },
     initMap() {
       // const state = this.$route.params.state
-      // if (state === 'victoria') {
+      if (this.location === 'newsouthwales') {
+        this.zoom_size = 5.3
+      } else if (this.location === 'victoria') {
+        this.zoom_size = 5.8
+      } else if (this.location === 'queensland') {
+        this.zoom_size = 4.9
+      } else if (this.location === 'southaustralia') {
+        this.zoom_size = 4.4
+      } else if (this.location === 'westernaustralia') {
+        this.zoom_size = 4.2
+      } else if (this.location === 'tasmania') {
+        this.zoom_size = 6.4
+      } else if (this.location === 'australiancapitalterritory') {
+        this.zoom_size = 7
+      } else if (this.location === 'northernterritory') {
+        this.zoom_size = 4.8
+      } else {
+        this.zoom_size = 7
+      }
       this.map1 = new google.maps.Map(document.getElementById('map1'), {
           // center: { lat: -25.2744, lng: 133.7751 },
           center: this.center,
-          zoom: 7,
+          zoom: this.zoom_size,
           gestureHandling: "none",
           disableDefaultUI: true
       })
       this.map2 = new google.maps.Map(document.getElementById('map2'), {
           // center: { lat: -25.2744, lng: 133.7751 },
           center: this.center,
-          zoom: 7,
+          zoom: this.zoom_size,
           gestureHandling: "none",
           disableDefaultUI: true
       })
       // }
     },
     createCircles() {
-        // const scenario = this.$route.params.scenario;
-        // const keywordTweets = null;
-        // if (scenario === 'unemployment') {
-        //     this.keywordTweets = this.tweets.unemployment;
-        // } else if (scenario === 'agism') {
-        //     this.keywordTweets = this.tweets.agism;
-        // } else if (scenario === 'sexism') {
-        //     this.keywordTweets = this.tweets.sexism;
-        // }
-        // if (scenario === 'unemployment') {
-        //     this.keywordSudo = this.sudo.unemployment;
-        // } else if (scenario === 'agism') {
-        //     this.keywordSudo = this.sudo.agism;
-        // } else if (scenario === 'sexism') {
-        //     this.keywordSudo = this.sudo.sexism;
-        // }
-        // this.keywordTweets = this.twi_data
-        // const keywordTweets = this.tweets[scenario];
         this.twi_data.forEach(tweet => {
+            if ((this.location !== 'australiancapitalterritory') && (this.location !== 'northernterritory') && (this.location !== 'offshoreterritories')) {
+              if (tweet.rank === 1) {
+                this.twi_color = '#ff6347'
+              } else if (tweet.rank === -1) {
+                this.twi_color = '#1e90ff'
+              } else {
+                this.twi_color = '#696969'
+              }
+            } else {
+              this.twi_color = '#696969'
+            }
+            
+            if (tweet.percentage === 0){
+              this.plot_radius = 0
+            } else{
+              this.plot_radius = (1 + 9 * (tweet.percentage - this.twi_min) / (this.twi_max - this.twi_min)) * 25000 / (this.zoom_size ** (1/2)) 
+            }
+
             const circleOptions = {
-                strokeColor: '#FF0000',
+                strokeColor: this.twi_color,
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: '#FF0000',
+                fillColor: this.twi_color,
                 fillOpacity: 0.35,
                 map: this.map1,
                 center: new google.maps.LatLng(tweet.lat, tweet.lng),
-                radius: tweet.percentage * 50000 // convert count to meters
+                radius: this.plot_radius
             };
             const circle1 = new google.maps.Circle(circleOptions);
             circle1.addListener('mouseover', () => {
@@ -356,14 +306,15 @@ export default {
 
         this.sudo_data.forEach(sudo => {
             const circleOptions = {
-                strokeColor: '#FF0000',
+                strokeColor: '#404040',
                 strokeOpacity: 0.8,
                 strokeWeight: 2,
-                fillColor: '#FF0000',
+                fillColor: '#808080',
                 fillOpacity: 0.35,
                 map: this.map2,
                 center: new google.maps.LatLng(sudo.lat, sudo.lng),
-                radius: sudo.percentage * 10000 // convert count to meters
+                // radius: (sudo.percentage - this.sudo_min * 0.9) ** 2 * 50 
+                radius: (1+9 * (sudo.percentage - this.sudo_min) / (this.sudo_max - this.sudo_min)) * 25000 / (this.zoom_size ** (2/3)) 
             };
 
             const circle2 = new google.maps.Circle(circleOptions);
@@ -400,11 +351,36 @@ export default {
       }
     },
     confirm() {
+        const new_twi_scenario = this.twi_scenario;
+        const new_sudo_scenario = this.sudo_scenario;
+        const new_state = this.location;
+
+        try {
+          const new_twiResponse = axios.get(`http://127.0.0.1:5000/api_twi_state_city/${new_twi_scenario}/${new_state}`);
+          this.center = new_twiResponse.data.state;
+          this.twi_data = new_twiResponse.data.results;
+        } catch (error) {
+          console.error('Failed to fetch Twitter data:', error);
+        }
+
+        try {
+          const new_sudoResponse = axios.get(`http://127.0.0.1:5000/api_sudo_state_city/${new_sudo_scenario}/${new_state}`);
+          this.sudo_data = new_sudoResponse.data.results;
+        } catch (error) {
+          console.error('Failed to fetch Sudo data:', error);
+        }
+
+        this.initMap();
+        this.createCircles();
+
         const scenario = this.twi_scenario + '-' + this.sudo_scenario
-        const new_state = this.location
-        console.log(scenario)
-        console.log(new_state)
-        this.$router.push({ name: 'results', params: { scenario: scenario, state: new_state } })
+        // const new_state = this.location
+        // this.$router.push({ name: 'results', params: { scenario: scenario, state: new_state } })
+        this.$router.push({ path: `/${scenario}/${new_state}`, query: { scenario, new_state } })
+
+
+
+        // this.$router.push({ path: `/${scenario}/${new_state}` });
         // window.location.reload();
     }
   }
@@ -538,7 +514,7 @@ export default {
   top: 51%;
   width: 35%;
   /* height: 10%; */
-  left: 38%;
+  left: 25%;
   z-index: 1;
 }
 .graph2 {

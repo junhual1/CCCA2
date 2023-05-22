@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="home">
-      <h1>Relationship Between Unemployment and Social Bias</h1>
+      <h1>Analysis of Regional Discussion on Employment and Social Bias in Social Media</h1>
     </div>
     <div>
       <div class="listScenario">
@@ -41,14 +41,14 @@
 
 <script>
 import Filter from '../components/Filter.vue'
-import Map from '../components/Map.vue'
+// import Map from '../components/Map.vue'
 import Test from '../components/test.vue'
-import MChart from '../components/mastodonChart.vue'
-import Table from '../components/Table.vue'
+// import MChart from '../components/mastodonChart.vue'
+// import Table from '../components/Table.vue'
 
 export default {
   name: 'HomeView',
-  components: { Filter, Map, Test, MChart, Table },
+  components: { Filter, Map, Test },
   data() {
     return {
         isPlaying: false,

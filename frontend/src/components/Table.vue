@@ -122,13 +122,13 @@ export default {
   mounted() {
 
     Promise.all([
-      axios.get('http://172.26.133.154:5000/api_mastodon/unemployment'),
-      axios.get('http://172.26.133.154:5000/api_mastodon/agism'),
-      axios.get('http://172.26.133.154:5000/api_mastodon/sexism'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/unemployment'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/agism'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/sexism'),
 
-      axios.get('http://172.26.133.154:5000/api_twi_total/unemployment'),
-      axios.get('http://172.26.133.154:5000/api_twi_total/agism'),
-      axios.get('http://172.26.133.154:5000/api_twi_total/sexism')
+      axios.get('http://127.0.0.1:5000/api_twi_total/unemployment'),
+      axios.get('http://127.0.0.1:5000/api_twi_total/agism'),
+      axios.get('http://127.0.0.1:5000/api_twi_total/sexism')
     ])
       .then(responses => {
         this.masEmploymentMentioned = responses[0].data.mentioned;

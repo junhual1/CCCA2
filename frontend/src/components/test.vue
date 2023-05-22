@@ -56,35 +56,35 @@ export default {
   mounted() {
     this.initMap();
     Promise.all([
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/newsouthwales'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/victoria'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/queensland'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/southaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/westernaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/tasmania'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/australiancapitalterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/northernterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/unemployment/offshoreterritories'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/newsouthwales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/southaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/westernaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/australiancapitalterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/northernterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/unemployment/offshoreterritories'),
 
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/newsouthwales'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/victoria'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/queensland'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/southaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/westernaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/tasmania'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/australiancapitalterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/northernterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/agism/offshoreterritories'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/newsouthwales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/southaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/westernaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/australiancapitalterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/northernterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/agism/offshoreterritories'),
 
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/newsouthwales'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/victoria'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/queensland'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/southaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/westernaustralia'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/tasmania'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/australiancapitalterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/northernterritory'),
-      axios.get('http://172.26.133.154:5000/api_twi_state_total/sexism/offshoreterritories')
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/newsouthwales'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/victoria'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/queensland'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/southaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/westernaustralia'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/tasmania'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/australiancapitalterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/northernterritory'),
+      axios.get('http://127.0.0.1:5000/api_twi_state_total/sexism/offshoreterritories')
     ])
       .then(responses => {
         this.twi_nsw = { ...responses[0].data['new south wales'], ...responses[0].data['summary']};
@@ -177,7 +177,7 @@ export default {
           fillOpacity: 0.35,
           map: this.map,
           center: new google.maps.LatLng(tweet.lat, tweet.lng),
-          radius: Math.sqrt(tweet.percentage) * 5000000 // convert count to meters
+          radius: Math.sqrt(tweet.percentage) * 5000000
         };
         const circle = new google.maps.Circle(circleOptions);
         circle.addListener('mouseover', () => {
