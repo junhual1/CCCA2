@@ -26,18 +26,24 @@ export default {
   },
   mounted() {
     Promise.all([
-      axios.get('http://172.26.133.154:5984/api_mastodon/unemployment'),
-      axios.get('http://172.26.133.154:5984/api_mastodon/agism'),
-      axios.get('http://172.26.133.154:5984/api_mastodon/sexism'),
+      // axios.get('http://172.26.133.154:5984/api_mastodon/unemployment'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/unemployment'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/agism'),
+      axios.get('http://127.0.0.1:5000/api_mastodon/sexism'),
+      // axios.get('http://172.26.133.154:5984/api_mastodon/agism'),
+      // axios.get('http://172.26.133.154:5984/api_mastodon/sexism'),
 
       axios.get('http://172.26.133.154:5984/api_twi_total/unemployment'),
       axios.get('http://172.26.133.154:5984/api_twi_total/agism'),
       axios.get('http://172.26.133.154:5984/api_twi_total/sexism')
     ])
       .then(responses => {
-        this.mastodonEmployment = responses[0].data.unemployment[0];
-        this.mastodonAgism = responses[1].data.agism[0];
-        this.mastodonSexism = responses[2].data.sexism[0];
+        // this.mastodonEmployment = responses[0].data.unemployment[0];
+        this.mastodonEmployment = responses[0].data;
+        this.mastodonAgism = responses[1].data;
+        // this.mastodonAgism = responses[1].data.agism[0];
+        // this.mastodonSexism = responses[2].data.sexism[0];
+        this.mastodonSexism = responses[2].data;
         this.twiEmployment = responses[3].data.summary;
         this.twiAgism = responses[4].data.summary;
         this.twiSexism = responses[5].data.summary;

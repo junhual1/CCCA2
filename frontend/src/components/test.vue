@@ -3,6 +3,7 @@
     <!-- <div>
       {{ this.test }}
     </div> -->
+    <Table :keyword="keyword" :showTable="showTable"></Table>
     <div id="map" style="height: 82%"></div>
     <div class="scenario">
       <button :style="{ backgroundColor: buttonColor1 }" @click="onKeywordClick('employment')">Employment</button>
@@ -15,8 +16,13 @@
 
 <script>
 import axios from 'axios';
+import Table from '../components/Table.vue'
+import MChart from '../components/mastodonChart.vue'
 
 export default {
+  components: {
+    Table, MChart
+  },
   data() {
     return {
       map: null,
@@ -28,6 +34,8 @@ export default {
 
       current_scenario: null,
       keywordTweets: null,
+      showTable: false,
+      showChart: false,
 
       twi_nsw: null,
       twi_vic: null,
@@ -185,26 +193,30 @@ export default {
       }
     },
     onKeywordClick(keyword) {
-      this.keyword = keyword;
+      this.updateKeyword(keyword)
       this.clearButtonColor();
-      // if (this.keyword === 'employment') {
-      //   this.changeButtonColor1();
-      // } else if (this.keyword === 'agism') {
-      //   this.changeButtonColor2();
-      // } else if (this.keyword === 'sexism') {
-      //   this.changeButtonColor3();
-      // }
       
       if (this.keyword !== this.current_scenario) {
         this.clearCircles();
-        
+        this.showTable = true;
         this.createCircles();
         this.current_scenario = this.keyword;
       }
       else {
+        this.displayTable()
         this.clearCircles();
         this.current_scenario = null
       }
+
+      this.$emit('toggle-table');
+
+      // this.$emit('variable-updated', this.keyword);
+    },
+    updateKeyword(keyword) {
+      this.keyword = keyword
+    },
+    displayTable() {
+      this.showTable = !this.showTable
     },
     clearCircles() {
       this.circles.forEach(circle => {

@@ -40,6 +40,18 @@ CORS(app)
 
 # get result - twi
 def api_0(state, scenario):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['twitter1']
     view = db.view(f'{scenario}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     
@@ -56,6 +68,18 @@ def api_0(state, scenario):
 
 # get result - sudo - agism
 def api_sudo_agism(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('agism/new-view', startkey=[state], endkey=[state, {}])
     
@@ -72,6 +96,18 @@ def api_sudo_agism(state):
 
 # get result - sudo - sexism
 def api_sudo_sexism(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('sexism/new-view', startkey=[state], endkey=[state, {}])
     
@@ -88,6 +124,18 @@ def api_sudo_sexism(state):
 
 # get result - sudo - unemployment
 def api_sudo_unemployment(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('unemployment/new-view', startkey=[state], endkey=[state, {}])
     
@@ -148,7 +196,19 @@ def autolabel(ax, bars,num):
 # main function to generate histogram
 @app.route('/api_histogram/<state>/<twi>/<sudo>')
 def create_figure(state, twi, sudo):
-    
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
+
     # get twitter & sudo data
     twi_df = api_0(state, twi)
     if sudo == 'agism':
@@ -251,6 +311,18 @@ def create_figure(state, twi, sudo):
 #get the sum of state with geo for map 
 @app.route('/api_twi_state_total/<topic>/<state>')
 def api_twi_state_total(topic,state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['twitter1']
     view = db.view(f'{topic}/new-view', startkey=[state], endkey=[state, {}],group_level = 2)
     results = []
@@ -336,6 +408,18 @@ def api_mastodon(topic):
 #get geo location of state parm 
 @app.route('/api_geo/<state>')
 def api_geo(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db_geo = server['geocenter']
     view = db_geo.view('geocenter/new-view')
     geo = {}
@@ -391,6 +475,18 @@ def ranking(lst, lst_diction, type_):
 # new added, get all citys of the state with geo for twitter
 @app.route('/api_twi_state_city/<topic>/<state>')
 def api_page2_twi(state,topic):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     all_geo = get_geo()
     
     return_value = {'state':{}}
@@ -417,6 +513,19 @@ def api_page2_twi(state,topic):
 ## new added for page 2 sudo plot
 @app.route('/api_sudo_state_city/<topic>/<state>')
 def api_page2_sudo(state,topic):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
+
     all_geo = get_geo()
 
     return_value = {'state':{}}
@@ -442,7 +551,7 @@ def api_page2_sudo(state,topic):
             rank.append([row['value']["employment_rate"],row['key'][1]])
     else:
         for row in view:
-            result = {"city": row['key'][1],'males': row['value']["males"],'females': row['value']["females"],'percentage': row['value']["gender_ratio"],
+            result = {"city": row['key'][1],'count': row['value']["gender_difference"],'percentage': row['value']["gender_ratio"],
             'lat': all_geo[row['key'][1]]['lat'], 'lng': all_geo[row['key'][1]]['lng']}
             results.append(result)
             rank.append([row['value']["gender_ratio"],row['key'][1]])
@@ -457,6 +566,18 @@ def api_page2_sudo(state,topic):
 #get all citys of agism by state with geo for sudo
 @app.route('/api_sudo_agism_state_city/<state>')
 def api_sudo_agism_state_city(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('agism/new-view', startkey=[state], endkey=[state, {}])
     data = []
@@ -480,6 +601,18 @@ def api_sudo_agism_state_city(state):
 
 @app.route('/api_sudo_sexism_state_city/<state>')
 def api_sudo_sexism_state_city(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('sexism/new-view', startkey=[state], endkey=[state, {}])
     data = []
@@ -502,6 +635,18 @@ def api_sudo_sexism_state_city(state):
 
 @app.route('/api_sudo_unemployment_state_city/<state>')
 def api_sudo_unemployment_state_city(state):
+    if state == 'newsouthwales':
+        state = 'new south wales'
+    elif state == 'australiancapitalterritory':
+        state = 'australian capital territory'
+    elif state == 'northernterritory':
+        state = 'northern territory'
+    elif state == "offshoreterritories":
+        state = "offshore territories"
+    elif state == "southaustralia":
+        state = "south australia"
+    elif state == "westernaustralia":
+        state = "western australia"
     db = server['sudo']
     view = db.view('unemployment/new-view', startkey=[state], endkey=[state, {}])
     data = []

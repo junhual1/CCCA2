@@ -1,6 +1,6 @@
-from mastodon import Mastodon, MastodonNotFoundError, MastodonRatelimitError, StreamListener
-import csv, os, time, json,datetime,couchdb,re
-
+from mastodon import Mastodon, StreamListener
+import time,datetime,couchdb
+import sys
 
 class Listener(StreamListener):
     def on_update(self, status):
@@ -8,10 +8,10 @@ class Listener(StreamListener):
             global server
             a_toot = {}
             count = cnt['count']
-            if f'mastodon_2_{count//1000000}' in server:
-                db = server[f'mastodon_2_{count//1000000}']
+            if f'mastodon{count//1000000}' in server:
+                db = server[f'mastodon{count//1000000}']
             elif count%1000000 == 0:
-                db = server.create(f'mastodon_2_{count//1000000}')
+                db = server.create(f'mastodon{count//1000000}')
                 map_unemployment = '''function (doc) {
                 var keywords = ['got fired','employ','idle','job loss',' layoff','jobless','redundancy',
                 'furlough','downsizing','out of work','retrenchment','job hunt',
@@ -128,12 +128,13 @@ class Listener(StreamListener):
                 db.save(doc_agism)
                 db.save(doc_sexism)
             else: 
-                db = server[f'mastodon_2_{count//1000000}']
+                db = server[f'mastodon{count//1000000}']
             a_toot["content"] = status['content']
             a_toot["time"] = status['created_at'].date().strftime("%Y-%m-%d")
             a_toot['toot_id']=str(status['id'])
             db.save(a_toot)
             cnt['count'] = len(db)
+
         except couchdb.http.ServerError:
             print('Error connecting to CouchDB node:', node)
             for node in node_servers:
@@ -151,13 +152,30 @@ class Listener(StreamListener):
                 # Executed if no healthy node is found
                 print('No healthy CouchDB nodes found.')
                 exit()
-        
 
+
+# if __name__ == '__main__':
+#     if len(sys.argv) != 3:
+#         raise ValueError("Host and ports are needed! Quiting")
+    
+#     # input 1 2 3 are ip address for 3 couchDB cluster
+#     ip1 = sys.argv[3]
+#     ip2 = sys.argv[4]
+
+#     # input 4 for mastdon access token
+#     token = sys.argv[1]
+    
+#     # input
+#     port = sys.argv[2]
+
+
+#     # input 1 2 3 are ip address for 3 couchDB cluster
+#     ips = sys.argv[5:]
 
 
 m = Mastodon(
-        api_base_url=f'https://aus.social',
-        access_token='r3G8_aPRdoy3XBChDblWxLB78uRX8n-EVe_zdW2PnZs'
+        api_base_url=f'https://mastodon.au/',
+        access_token='3pNPEKMUu8fkt6knKW_Mc0NKqdpKLoOKwa0hiWaZhWk'
     )
 
 # node_ip = ips[0]
@@ -191,3 +209,4 @@ else:
     exit()
 print(server)
 m.stream_public(Listener())
+
