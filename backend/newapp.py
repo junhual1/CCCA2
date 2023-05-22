@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import io
 import base64
+from flask import Flask, jsonify
 
 # Define the list of node IPs in the cluster
 cluster_nodes = ["172.26.132.54", "172.26.133.32", "172.26.130.9"]
@@ -302,7 +303,7 @@ def create_figure(state, twi, sudo):
     image_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
 
     # Return the base64-encoded image
-    return image_base64
+    return jsonify(image_base64=image_base64)
     # plt.savefig('plot.png', bbox_inches='tight', dpi=300)
     # plt.show()
 
