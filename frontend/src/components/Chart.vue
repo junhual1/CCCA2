@@ -27,7 +27,9 @@ export default {
       sudo_rank: [],
       twi_color: [],
       sudo_color: [],
-      chart_title: null
+      chart_title: null,
+      twi_interval: null,
+      sudo_interval: null
     }
   },
   async mounted() {
@@ -52,13 +54,44 @@ export default {
     } 
 
     try {
+      const sudoResponse = await axios.get(`http://127.0.0.1:5000/api_sudo_state_city/${sudo_scenario}/${state}`);
+      this.sudo_data = sudoResponse.data.results;
+      this.sudo_data.forEach(sudo => {
+        this.sudo_city.push(sudo.city)
+        this.sudo_perc.push(sudo.percentage.toFixed(3))
+        this.sudo_rank.push(sudo.rank)
+      })
+      this.sudo_rank.forEach(rank => {
+        if (rank === 0) {
+          this.sudo_color.push('#c0c0c0')
+        } else if (rank === 1) {
+          this.sudo_color.push('#c0c0c0')
+        } else if (rank === -1) {
+          this.sudo_color.push('#c0c0c0')
+        }
+      })
+      this.sudo_max_perc = Math.max(...this.sudo_perc) * 1.15
+      this.sudo_interval = this.sudo_max_perc / 10
+    } catch (error) {
+      console.error('Failed to fetch Sudo data:', error);
+    }
+
+    try {
       const twiResponse = await axios.get(`http://127.0.0.1:5000/api_twi_state_city/${twi_scenario}/${state}`);
       this.twi_data = twiResponse.data.results;
-      this.twi_data.forEach(twi => {
-        this.twi_city.push(twi.city)
-        this.twi_perc.push(twi.percentage.toFixed(5))
-        this.twi_rank.push(twi.rank)
+      this.sudo_data.forEach(sudo =>{
+        this.twi_data.forEach(twi => {
+          if (twi.city === sudo.city){
+            this.twi_perc.push(twi.percentage.toFixed(5))
+            this.twi_rank.push(twi.rank)
+          }
+        })
       })
+      // this.twi_data.forEach(twi => {
+      //   this.twi_city.push(twi.city)
+      //   this.twi_perc.push(twi.percentage.toFixed(5))
+      //   this.twi_rank.push(twi.rank)
+      // })
 
       this.twi_rank.forEach(rank => {
         if ((state !== 'australiancapitalterritory') && (state !== 'northernterritory') && (state !== 'offshoreterritories')) {
@@ -85,36 +118,22 @@ export default {
       // })
       // console.log(this.twi_color)
       this.twi_max_perc = Math.max(...this.twi_perc) * 1.15
+      this.twi_interval = this.twi_max_perc / 10
     } catch (error) {
       console.error('Failed to fetch Twitter data:', error);
     }
 
-    try {
-      const sudoResponse = await axios.get(`http://127.0.0.1:5000/api_sudo_state_city/${sudo_scenario}/${state}`);
-      this.sudo_data = sudoResponse.data.results;
-      this.sudo_data.forEach(sudo => {
-        this.sudo_city.push(sudo.city)
-        this.sudo_perc.push(sudo.percentage.toFixed(3))
-        this.sudo_rank.push(sudo.rank)
-      })
-      this.sudo_rank.forEach(rank => {
-        if (rank === 0) {
-          this.sudo_color.push('#c0c0c0')
-        } else if (rank === 1) {
-          this.sudo_color.push('#c0c0c0')
-        } else if (rank === -1) {
-          this.sudo_color.push('#c0c0c0')
-        }
-      })
-      this.sudo_max_perc = Math.max(...this.sudo_perc) * 1.15
-    } catch (error) {
-      console.error('Failed to fetch Sudo data:', error);
-    }
+
 
     this.initChart();
   },
   methods: {
     initChart() {
+      const twiMax = Math.min(this.twi_interval.toFixed(3) * 10, Number.MAX_VALUE);
+      const twuInterval = Number(this.twi_interval.toFixed(3));
+      const sudoMax = Math.min(this.sudo_interval.toFixed(3) * 10, Number.MAX_VALUE);
+      const sudoInterval = Number(this.sudo_interval.toFixed(3));
+
       const chartDom = document.getElementById('chart');
       const myChart = echarts.init(chartDom);
       const option = {
@@ -140,7 +159,7 @@ export default {
         xAxis: [
           {
             type: 'category',
-            data: this.twi_city,
+            data: this.sudo_city,
             axisPointer: {
               type: 'shadow'
             },
@@ -154,8 +173,8 @@ export default {
             type: 'value',
             name: 'Twitter',
             min: 0,
-            max: this.twi_max_perc,
-            interval: this.twi_max_perc/10,
+            max: twiMax,
+            interval: twuInterval,
             axisLabel: {
               formatter: '{value} %'
             }
@@ -164,8 +183,8 @@ export default {
             type: 'value',
             name: 'Sudo',
             min: 0,
-            max: this.sudo_max_perc,
-            interval: this.sudo_max_perc/10,
+            max: sudoMax,
+            interval: sudoInterval,
             axisLabel: {
               formatter: '{value} %'
             }

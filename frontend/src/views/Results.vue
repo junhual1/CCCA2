@@ -7,7 +7,7 @@
         <span v-if="this.twi_scenario === 'sexism'">Main Scenario: <br>Sexism Discussion Rate<br></span>
         <br>
         <span v-if="this.sudo_scenario === 'unemployment'">Compared Scenario: <br>Official Employment Rate</span>
-        <span v-if="this.sudo_scenario === 'agism'">Compared Scenario: <br>Official Aging Percentage</span>
+        <span v-if="this.sudo_scenario === 'agism'">Compared Scenario: <br>Official Aging Rate</span>
         <span v-if="this.sudo_scenario === 'sexism'">Compared Scenario: <br>Official Gender Ratio</span>
         <br>
         <!-- <span>Current Sudo Scenario: {{ $route.params.sudo_scenario }}</span> -->
@@ -38,7 +38,7 @@
               <button @click="this.sudo_scenario = 'unemployment'">vs offical employment rate</button>
             </li>
             <li>
-              <button @click="this.sudo_scenario = 'agism'">vs offical aging percentage</button>
+              <button @click="this.sudo_scenario = 'agism'">vs offical Aging Rate</button>
             </li>
             <li>
               <button @click="this.sudo_scenario = 'sexism'">vs offical gender ratio</button>
@@ -54,7 +54,7 @@
           </button>
           <ul class="dropdown-list" :class="{ 'is-open': isDropdownOpen2 }">
             <li>
-              <button @click="this.sudo_scenario = 'agism'">vs offical aging percentage</button>
+              <button @click="this.sudo_scenario = 'agism'">vs offical Aging Rate</button>
             </li>
             <li>
               <button>vs other 2 scenarios mentioned in tweets</button>
@@ -96,11 +96,63 @@
       <!-- </div> -->
     </div>
     <div class="map1">
-      <h3>Data from Twitter</h3>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'newsouthwales'">Employment Discussion Rate on Twitter for New South Wales</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'victoria'">Employment Discussion Rate on Twitter for Victoria</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'queensland'">Employment Discussion Rate on Twitter for Queensland</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'southaustralia'">Employment Discussion Rate on Twitter for South Australia</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'westernaustralia'">Employment Discussion Rate on Twitter for Western Australia</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'tasmania'">Employment Discussion Rate on Twitter for Tasmania</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'australiancapitalterritory'">Employment Discussion Rate on Twitter for Australian Capital Territory</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'northernterritory'">Employment Discussion Rate on Twitter for Northern Territory</h4>
+      <h4 v-if="this.twi_scenario === 'unemployment' && this.location === 'offshoreterritories'">Employment Discussion Rate on Twitter for Offshore Territories</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'newsouthwales'">Sexism Discussion Rate on Twitter for New South Wales</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'victoria'">Sexism Discussion Rate on Twitter for Victoria</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'queensland'">Sexism Discussion Rate on Twitter for Queensland</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'southaustralia'">Sexism Discussion Rate on Twitter for South Australia</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'westernaustralia'">Sexism Discussion Rate on Twitter for Western Australia</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'tasmania'">Sexism Discussion Rate on Twitter for Tasmania</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'australiancapitalterritory'">Sexism Discussion Rate on Twitter for Australian Capital Territory</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'northernterritory'">Sexism Discussion Rate on Twitter for Northern Territory</h4>
+      <h4 v-if="this.twi_scenario === 'sexism' && this.location === 'offshoreterritories'">Sexism Discussion Rate on Twitter for Offshore Territories</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'newsouthwales'">Agism Discussion Rate on Twitter for New South Wales</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'victoria'">Agism Discussion Rate on Twitter for Victoria</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'queensland'">Agism Discussion Rate on Twitter for Queensland</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'southaustralia'">Agism Discussion Rate on Twitter for South Australia</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'westernaustralia'">Agism Discussion Rate on Twitter for Western Australia</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'tasmania'">Agism Discussion Rate on Twitter for Tasmania</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'australiancapitalterritory'">Agism Discussion Rate on Twitter for Australian Capital Territory</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'northernterritory'">Agism Discussion Rate on Twitter for Northern Territory</h4>
+      <h4 v-if="this.twi_scenario === 'agism' && this.location === 'offshoreterritories'">Agism Discussion Rate on Twitter for Offshore Territories</h4>
       <div id="map1"></div>
     </div>
     <div class="map2">
-      <h3>Data from Sudo</h3>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'newsouthwales'">Official Employment Rate for New South Wales</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'victoria'">Official Employment Rate for Victoria</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'queensland'">Official Employment Rate for Queensland</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'southaustralia'">Official Employment Rate for South Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'westernaustralia'">Official Employment Rate for Western Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'tasmania'">Official Employment Rate for Tasmania</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'australiancapitalterritory'">Official Employment Rate for Australian Capital Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'northernterritory'">Official Employment Rate for Northern Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'unemployment' && this.location === 'offshoreterritories'">Official Employment Rate for Offshore Territories</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'newsouthwales'">Official Gender Ratio for New South Wales</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'victoria'">Official Gender Ratio for Victoria</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'queensland'">Official Gender Ratio for Queensland</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'southaustralia'">Official Gender Ratio for South Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'westernaustralia'">Official Gender Ratio for Western Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'tasmania'">Official Gender Ratio for Tasmania</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'australiancapitalterritory'">Official Gender Ratio for Australian Capital Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'northernterritory'">Official Gender Ratio for Northern Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'sexism' && this.location === 'offshoreterritories'">Official Gender Ratio for Offshore Territories</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'newsouthwales'">Official Aging Rate for New South Wales</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'victoria'">Official Aging Rate for Victoria</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'queensland'">Official Aging Rate for Queensland</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'southaustralia'">Official Aging Rate for South Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'westernaustralia'">Official Aging Rate for Western Australia</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'tasmania'">Official Aging Rate for Tasmania</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'australiancapitalterritory'">Official Aging Rate for Australian Capital Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'northernterritory'">Official Aging Rate for Northern Territory</h4>
+      <h4 v-if="this.sudo_scenario === 'agism' && this.location === 'offshoreterritories'">Official Aging Rate for Offshore Territories</h4>
       <div id="map2"></div>
     </div>
 
@@ -316,10 +368,16 @@ export default {
                 // radius: (sudo.percentage - this.sudo_min * 0.9) ** 2 * 50 
                 radius: (1+9 * (sudo.percentage - this.sudo_min) / (this.sudo_max - this.sudo_min)) * 25000 / (this.zoom_size ** (2/3)) 
             };
-
             const circle2 = new google.maps.Circle(circleOptions);
             circle2.addListener('mouseover', () => {
-                this.showInfoWindow2(circle2, sudo.city, sudo.count, sudo.total, sudo.percentage);
+              if (this.sudo_scenario === 'unemployment') {
+                this.showInfoWindow2(circle2, sudo.city, sudo.population, sudo.percentage);
+              } else if (this.sudo_scenario === 'agism') {
+                this.showInfoWindow3(circle2, sudo.city, sudo.population, sudo.percentage);
+              } else if (this.sudo_scenario === 'sexism') {
+                this.showInfoWindow4(circle2, sudo.city, sudo.population, sudo.percentage);
+              }
+                
             });
             circle2.addListener('mouseout', () => {
                 this.hideInfoWindow();
@@ -327,18 +385,36 @@ export default {
             this.circles2.push(circle2);
         });
     },
-    showInfoWindow1(circle, name, count, total, percentage) {
+    showInfoWindow1(circle, city, count, total, percentage) {
       const infoWindow1 = new google.maps.InfoWindow({
-        content: `Name: ${name}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`,
+        content: `Name: ${city}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`,
         // disableAutoPan: true
       });
       infoWindow1.setPosition(circle.getCenter());
       infoWindow1.open(this.map1);
       this.infoWindow = infoWindow1;
     },
-    showInfoWindow2(circle, name, count, total, percentage) {
+    showInfoWindow2(circle, city, population, percentage) {
       const infoWindow2 = new google.maps.InfoWindow({
-        content: `Name: ${name}<br>Count: ${count}<br>Ageing population: ${total}<br>Ageing population percentage: ${percentage.toFixed(3)}%`,
+        content: `Name: ${city}<br>Employed Population: ${population}<br>Employment Rate: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
+      });
+      infoWindow2.setPosition(circle.getCenter());
+      infoWindow2.open(this.map2);
+      this.infoWindow = infoWindow2;
+    },
+    showInfoWindow3(circle, city, population, percentage) {
+      const infoWindow2 = new google.maps.InfoWindow({
+        content: `Name: ${city}<br>Ageing Population: ${population}<br>Ageing Rate: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
+      });
+      infoWindow2.setPosition(circle.getCenter());
+      infoWindow2.open(this.map2);
+      this.infoWindow = infoWindow2;
+    },
+    showInfoWindow4(circle, city, population, percentage) {
+      const infoWindow2 = new google.maps.InfoWindow({
+        content: `Name: ${city}<br>Population Difference: ${population}<br>Gender Ratio: ${percentage.toFixed(3)}`,
         // disableAutoPan: true
       });
       infoWindow2.setPosition(circle.getCenter());
@@ -486,7 +562,7 @@ export default {
     height: 100%;
     z-index: 1;
 }
-.scenario {
+/* .scenario {
     position: relative;
 }
 .scenario button {
@@ -507,7 +583,7 @@ export default {
 .scenario button:hover {
   cursor: pointer;
   background: #eee;
-}
+} */
 
 .dynamic-chart {
   position: absolute;
@@ -521,7 +597,21 @@ export default {
   position: absolute;
   top: 50%;
   left: 25%;
-
+}
+.back button {
+    position: relative;
+    border: 1px solid #d9d9d9;
+    padding: 5px 10px;
+    border-radius: 8px;
+    z-index: 2;
+    top: 15px;
+    margin-right: 10px;
+    font-size: 1em;
+    background: white;
+}
+.back button:hover {
+  background: #eee;
+  cursor: pointer;
 }
 
 </style>

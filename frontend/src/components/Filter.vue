@@ -17,7 +17,7 @@
         <span class="filterScenario2">VS</span>
         <select v-model="select2" :disabled="this.select1 === null">
             <option v-if="this.select1 === 'unemployment'" value="unemployment">Official employment rate</option>
-            <option v-if="this.select1 === 'unemployment' || this.select1 === 'agism'" value="agism">Official aging percentage</option>
+            <option v-if="this.select1 === 'unemployment' || this.select1 === 'agism'" value="agism">Official Aging Rate</option>
             <option v-if="this.select1 === 'unemployment' || this.select1 === 'sexism'" value="sexism">Official gender ratio</option>
             <!-- <option v-if="this.select1 === 'unemployment'" value="agism-sexism">Agism and Sexism discussion rate on Twitter</option> -->
             <!-- <option v-if="this.select1 === 'agism'" value="agism-sexism">Employment and Sexism discussion rate on Twitter</option> -->
