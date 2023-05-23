@@ -165,6 +165,7 @@ export default {
     height: 100%;
     z-index: 1;
     border-collapse: collapse;
+    margin-bottom: 150px;
   }
   th {
     border: 1px solid black;
@@ -173,5 +174,9 @@ export default {
   td {
     border: 1px solid black;
     padding: 8px;
+  }
+  caption {
+    font-size: 1em;
+    font-weight: bold;
   }
 </style>

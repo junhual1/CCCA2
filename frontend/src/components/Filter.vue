@@ -19,9 +19,9 @@
             <option v-if="this.select1 === 'unemployment'" value="unemployment">Official employment rate</option>
             <option v-if="this.select1 === 'unemployment' || this.select1 === 'agism'" value="agism">Official Aging Rate</option>
             <option v-if="this.select1 === 'unemployment' || this.select1 === 'sexism'" value="sexism">Official gender ratio</option>
-            <!-- <option v-if="this.select1 === 'unemployment'" value="agism-sexism">Agism and Sexism discussion rate on Twitter</option> -->
-            <!-- <option v-if="this.select1 === 'agism'" value="agism-sexism">Employment and Sexism discussion rate on Twitter</option> -->
-            <!-- <option v-if="this.select1 === 'sexism'" value="agism-sexism">Employment and Agism discussion rate on Twitter</option> -->
+            <option v-if="this.select1 === 'unemployment'" value="agism-sexism">Agism and Sexism discussion rate on Twitter</option>
+            <option v-if="this.select1 === 'agism'" value="unemployment-sexism">Employment and Sexism discussion rate on Twitter</option>
+            <option v-if="this.select1 === 'sexism'" value="unemployment-agism">Employment and Agism discussion rate on Twitter</option>
         </select>
       </div>
     </div>

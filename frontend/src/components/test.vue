@@ -2,7 +2,7 @@
   <div>
     <div class="graph">
       <Table :keyword="keyword" :showTable="showTable" ></Table>
-      <MChart :keyword="keyword" :showChart="showChart" ></MChart>
+      <MChart />
     </div>
 
     <div id="map" style="height: 82%"></div>
@@ -306,7 +306,7 @@ export default {
 .graph {
   position: absolute;
   z-index: 2;
-  left: 3%;
-  bottom: 5%;
+  left: 1%;
+  bottom: 0%;
 }
 </style>

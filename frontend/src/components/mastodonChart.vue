@@ -1,22 +1,20 @@
 <template>
-  <div>
-    <div v-if="showChart" class="MChart">
-      <canvas id="MChart" style="width: 300px; height: 200px;"></canvas>
-    </div>
-    <div v-if="showChart" class="MChart2">
-      <canvas id="MChart2" style="width: 300px; height: 200px;"></canvas>
-    </div>
-  </div>
+
+  <div id="Mchart" style="width: 430px; height: 300px;"></div>
+  
 </template>
 
 <script>
 import axios from 'axios';
-import Chart from 'chart.js/auto';
+import * as echarts from 'echarts';
+import 'echarts/lib/chart/bar';
+import 'echarts/lib/chart/line';
+import 'echarts/lib/component/tooltip';
+import 'echarts/lib/component/toolbox';
+import 'echarts/lib/component/legend';
+import 'echarts/lib/component/title';
 
 export default {
-  props: 
-        ['keyword', 'showChart']
-    ,
   data() {
     return {
       mastodonEmployment: null,
@@ -25,116 +23,137 @@ export default {
       twiEmployment: null,
       twiAgism: null,
       twiSexism: null,
+      mastodon_data: [],
+      twi_data: [],
+      mastodon_max: null,
+      twi_max: null
     }
   },
-  mounted() {
-    Promise.all([
-      axios.get('http://127.0.0.1:5000/api_mastodon/unemployment'),
-      axios.get('http://127.0.0.1:5000/api_mastodon/agism'),
-      axios.get('http://127.0.0.1:5000/api_mastodon/sexism'),
+  async mounted() {
+    try {
+      const masEmployResponse = await axios.get('http://127.0.0.1:5000/api_mastodon/unemployment');
+      this.mastodonEmployment = masEmployResponse.data.percentage * 100;
+      this.mastodon_data.push(this.mastodonEmployment.toFixed(3))
+    } catch (error) {
+      console.error('Failed to fetch Mastodon data:', error);
+    }
+    try {
+      const masAgismResponse = await axios.get('http://127.0.0.1:5000/api_mastodon/agism');
+      this.mastodonAgism = masAgismResponse.data.percentage * 100;
+      this.mastodon_data.push(this.mastodonAgism.toFixed(3))
+    } catch (error) {
+      console.error('Failed to fetch Mastodon data:', error);
+    }
+    try {
+      const masSexismResponse = await axios.get('http://127.0.0.1:5000/api_mastodon/sexism');
+      this.mastodonSexism = masSexismResponse.data.percentage * 100;
+      this.mastodon_data.push(this.mastodonSexism.toFixed(3))
+      this.mastodon_max = Math.ceil(Math.max(...this.mastodon_data) * 10) / 10
+    } catch (error) {
+      console.error('Failed to fetch Mastodon data:', error);
+    }
+    try {
+      const twiEmployResponse = await axios.get('http://127.0.0.1:5000/api_twi_total/unemployment');
+      this.twiEmployment = twiEmployResponse.data.summary.percentage * 100;
+      this.twi_data.push(this.twiEmployment.toFixed(3))
+    } catch (error) {
+      console.error('Failed to fetch Twitter data:', error);
+    }
+    try {
+      const twiAgismResponse = await axios.get('http://127.0.0.1:5000/api_twi_total/agism');
+      this.twiAgism = twiAgismResponse.data.summary.percentage * 100;
+      this.twi_data.push(this.twiAgism.toFixed(3))
+    } catch (error) {
+      console.error('Failed to fetch Twitter data:', error);
+    }
+    try {
+      const twiSexismResponse = await axios.get('http://127.0.0.1:5000/api_twi_total/sexism');
+      this.twiSexism = twiSexismResponse.data.summary.percentage * 100;
+      this.twi_data.push(this.twiSexism.toFixed(3))
+      this.twi_max = Math.ceil(Math.max(...this.twi_data) * 10) / 10
+    } catch (error) {
+      console.error('Failed to fetch Twitter data:', error);
+    }
 
-      axios.get('http://127.0.0.1:5000/api_twi_total/unemployment'),
-      axios.get('http://127.0.0.1:5000/api_twi_total/agism'),
-      axios.get('http://127.0.0.1:5000/api_twi_total/sexism')
-    ])
-      .then(responses => {
-        this.mastodonEmployment = responses[0].data;
-        this.mastodonAgism = responses[1].data;
-        this.mastodonSexism = responses[2].data;
-        this.twiEmployment = responses[3].data.summary;
-        this.twiAgism = responses[4].data.summary;
-        this.twiSexism = responses[5].data.summary;
-        this.createBarChart();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    this.initChart();
   },
   methods: {
-    createBarChart() {
-      const ctx = document.getElementById('MChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: ['Employment', 'Agism', 'Sexism'],
-          datasets: [
-            {
-              label: 'Percentage',
-              data: [this.mastodonEmployment.percentage, this.mastodonAgism.percentage, this.mastodonSexism.percentage],
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              borderColor: 'rgba(0, 0, 0, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Percentage of mentions of each topic on Mastodon',
-            },
-          },
-        },
-      });
+      initChart() {
 
-      const ctx2 = document.getElementById('MChart2').getContext('2d');
-      new Chart(ctx2, {
-        type: 'bar',
-        data: {
-          labels: ['Employment', 'Agism', 'Sexism'],
-          datasets: [
-            {
-              label: 'Percentage',
-              data: [this.twiEmployment.percentage, this.twiAgism.percentage, this.twiSexism.percentage],
-              backgroundColor: 'rgba(0, 0, 0, 0.4)',
-              borderColor: 'rgba(0, 0, 0, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true,
-            },
-          },
-          plugins: {
-            title: {
-              display: true,
-              text: 'Percentage of mentions of each topic on Twitter',
-            },
+      const chartDom = document.getElementById('Mchart');
+      const myChart = echarts.init(chartDom);
+      const option = {
+        title: {
+          text: 'Comparasion of Topic Discussion Rate Between Twitter and Mastodon',
+          textStyle: {
+            fontSize: 12,
+            fontWeight: 'bold',
           },
         },
-      });
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'cross',
+            crossStyle: {
+              color: '#999'
+            }
+          }
+        },
+        legend: {
+          data: ['Twitter', 'Mastodon'],
+          right: 40, 
+          top: 30
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: ['Employment', 'Agism', 'Sexism'],
+            axisPointer: {
+              type: 'shadow'
+            },
+            axisLabel: {
+              rotate: 0
+            }
+          }
+        ],
+        yAxis: {
+          type: 'value',
+          name: 'Discussion Rate',
+          min: 0,
+          max: this.mastodon_max, 
+          interval: 0.1,
+          axisLabel: {
+            formatter: '{value} %'
+          }
+        },
+        series: [
+          {
+            name: 'Twitter',
+            type: 'bar',
+            itemStyle: {
+              color: 'rgba(0, 0, 0, 0.6)'
+            },
+            tooltip: {
+              formatter: '{c} %'
+            },
+            data: this.twi_data 
+          },
+          {
+            name: 'Mastodon',
+            type: 'bar',
+            itemStyle: {
+              color: 'rgba(0, 0, 0, 0.3)'
+            },
+            tooltip: {
+              formatter: '{c} %'
+            },
+            data: this.mastodon_data
+          }
+        ]
+      };
+      
+      myChart.setOption(option);
     }
-
   }
 }
 </script>
-
-<style>
-.MChart {
-    position: relative;
-    /* display: block; */
-    width: 300px;
-    height: 200px;
-    /* left: 10%; */
-    z-index: 1;
-}
-
-.MChart2 {
-    position: relative;
-    /* display: block; */
-    width: 300px;
-    height: 200px;
-    /* left: 10%; */
-    z-index: 1;
-}
-</style>
