@@ -6,7 +6,7 @@
     <div class="filterSelect">
       <div class="scenario1">
         <span class="filterScenario">Scenario: </span>
-        <select v-model="select1">
+        <select v-model="select1" required>
             <option value="unemployment">Employment discussion rate on Twitter</option>
             <option value="agism">Agism discussion rate on Twitter</option>
             <option value="sexism">Sexism discussion rate on Twitter</option>
@@ -15,7 +15,7 @@
 
       <div class="scenario2">
         <span class="filterScenario2">VS</span>
-        <select v-model="select2" :disabled="this.select1 === null">
+        <select v-model="select2" :disabled="this.select1 === null" required>
             <option v-if="this.select1 === 'unemployment'" value="unemployment">Official employment rate</option>
             <option v-if="this.select1 === 'unemployment' || this.select1 === 'agism'" value="agism">Official Aging Rate</option>
             <option v-if="this.select1 === 'unemployment' || this.select1 === 'sexism'" value="sexism">Official gender ratio</option>
@@ -28,7 +28,7 @@
         
     <div class="state">
       <span class="filterScenario">State: </span>
-      <select v-model="select3">
+      <select v-model="select3" required>
           <option value="newsouthwales">New South Wales</option>
           <option value="victoria">Victoria</option>
           <option value="queensland">Queensland</option>
@@ -45,7 +45,8 @@
       <p>Click "Search" to see </p>
     </div> -->
     <div class="submit">
-        <button @click="search">Search</button>
+        <button @click="search" :disabled="!this.select1 || !this.select2 || !this.select3">Search</button>
+        <p class="disable" v-if="!this.select1 || !this.select2 || !this.select3" style="color: red;">Please select scenarios and state</p>
     </div>
   </div>
   
@@ -58,11 +59,13 @@ export default {
         return {
             select1: null,
             select2: null,
-            select3: null
+            select3: null,
+            disable: false
         }
     },
     methods: {
         search() {
+            this.disable = true
             const scenario = this.select1 + '-' + this.select2
             const state = this.select3
             this.$router.push({ name: 'results', params: { scenario: scenario, state: state } })
@@ -75,7 +78,7 @@ export default {
   #filter {
     position: absolute;
     width: 64%;
-    height: 40%;
+    height: 45%;
     border-radius: 12px;
     background: #f5f5f5;
     color: white;
@@ -232,5 +235,9 @@ export default {
     position: absolute;
     top: 15px;
     right: 15px;
+  }
+  .disable {
+    position: relative;
+    bottom: 10px;
   }
 </style>

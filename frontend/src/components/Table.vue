@@ -8,7 +8,7 @@
               <th></th>
               <th>Mentioned</th>
               <th>Total</th>
-              <th>Percentage</th>
+              <th>Percentage (%)</th>
           </tr>
           </thead>
           <tbody>
@@ -16,13 +16,13 @@
               <td>Mastodon</td>
               <td>{{ this.masEmploymentMentioned }}</td>
               <td>{{ this.masEmploymentTotal }}</td>
-              <td>{{ this.masEmploymentPercentage }}</td>
+              <td>{{ this.masEmploymentPercentage * 100 }}</td>
           </tr>
           <tr>
               <td>Twitter</td>
               <td>{{ this.twiEmploymentCount }}</td>
               <td>{{ this.twiEmploymentTotal }}</td>
-              <td>{{ this.twiEmploymentPercentage }}</td>
+              <td>{{ this.twiEmploymentPercentage * 100 }}</td>
           </tr>
           </tbody>
         </table>
@@ -34,7 +34,7 @@
               <th></th>
               <th>Mentioned</th>
               <th>Total</th>
-              <th>Percentage</th>
+              <th>Percentage (%)</th>
           </tr>
           </thead>
           <tbody>
@@ -42,13 +42,13 @@
               <td>Mastodon</td>
               <td>{{ this.masAgismMentioned }}</td>
               <td>{{ this.masAgismTotal }}</td>
-              <td>{{ this.masAgismPercentage }}</td>
+              <td>{{ this.masAgismPercentage * 100 }}</td>
           </tr>
           <tr>
               <td>Twitter</td>
               <td>{{ this.twiAgismCount }}</td>
               <td>{{ this.twiAgismTotal }}</td>
-              <td>{{ this.twiAgismPercentage }}</td>
+              <td>{{ this.twiAgismPercentage * 100 }}</td>
           </tr>
           </tbody>
         </table>
@@ -60,7 +60,7 @@
               <th></th>
               <th>Mentioned</th>
               <th>Total</th>
-              <th>Percentage</th>
+              <th>Percentage (%)</th>
           </tr>
           </thead>
           <tbody>
@@ -68,13 +68,13 @@
               <td>Mastodon</td>
               <td>{{ this.masSexismMentioned }}</td>
               <td>{{ this.masSexismTotal }}</td>
-              <td>{{ this.masSexismPercentage }}</td>
+              <td>{{ this.masSexismPercentage * 100 }}</td>
           </tr>
           <tr>
               <td>Twitter</td>
               <td>{{ this.twiSexismCount }}</td>
               <td>{{ this.twiSexismTotal }}</td>
-              <td>{{ this.twiSexismPercentage }}</td>
+              <td>{{ this.twiSexismPercentage * 100 }}</td>
           </tr>
           </tbody>
         </table>
@@ -161,7 +161,7 @@ export default {
 <style>
   table {
     position: relative;
-    width: 100%;
+    width: 95%;
     height: 100%;
     z-index: 1;
     border-collapse: collapse;
