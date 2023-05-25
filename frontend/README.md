@@ -1,3 +1,10 @@
+# Some functions tidied up by tools
+
+The initMap(), createCircles(), showInfoWindow(), hideInfoWindow() in test.vue and Results.vue has been tidied up using ChatGPT to enhance the structure and readability of the code. "https://chat.openai.com/"
+
+The initChart() in Chart.vue and mastodonChart.vue has been tidied up using the theme builder resource from Apache ECharts to add elements in the chart. "https://echarts.apache.org/en/index.html"
+
+
 # web-app
 
 ## Project setup
