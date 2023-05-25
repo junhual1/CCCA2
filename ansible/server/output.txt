@@ -1,0 +1,46 @@
+ansible-playbook [core 2.13.9]
+  config file = None
+  configured module search path = ['/home/junhual1/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /home/junhual1/.local/lib/python3.8/site-packages/ansible
+  ansible collection location = /home/junhual1/.ansible/collections:/usr/share/ansible/collections
+  executable location = /home/junhual1/.local/bin/ansible-playbook
+  python version = 3.8.16 (default, Mar  2 2023, 03:21:46) [GCC 11.2.0]
+  jinja version = 3.1.2
+  libyaml = True
+No config file found; using defaults
+Skipping callback 'default', as we already have a stdout callback.
+Skipping callback 'minimal', as we already have a stdout callback.
+Skipping callback 'oneline', as we already have a stdout callback.
+
+PLAYBOOK: mrc.yaml *************************************************************
+1 plays in mrc.yaml
+
+PLAY [COMP90024] ***************************************************************
+
+TASK [Gathering Facts] *********************************************************
+task path: /home/junhual1/ccc/ass2/ansible/mrc.yaml:13
+ok: [172.26.133.154]
+META: ran handlers
+
+TASK [docker-fe_server : Print current path from root] *************************
+task path: /home/junhual1/ccc/ass2/ansible/roles/docker-fe_server/tasks/main.yaml:2
+changed: [172.26.133.154] => {"changed": true, "cmd": ["pwd", "-P"], "delta": "0:00:00.004234", "end": "2023-05-24 05:10:43.437383", "msg": "", "rc": 0, "start": "2023-05-24 05:10:43.433149", "stderr": "", "stderr_lines": [], "stdout": "/home/ubuntu", "stdout_lines": ["/home/ubuntu"]}
+
+TASK [docker-fe_server : Create directory] *************************************
+task path: /home/junhual1/ccc/ass2/ansible/roles/docker-fe_server/tasks/main.yaml:5
+ok: [172.26.133.154] => {"changed": false, "gid": 1001, "group": "ubuntu", "mode": "0775", "owner": "ubuntu", "path": "/home/ubuntu/docker", "size": 4096, "state": "directory", "uid": 1000}
+
+TASK [docker-fe_server : Copy a server image] **********************************
+task path: /home/junhual1/ccc/ass2/ansible/roles/docker-fe_server/tasks/main.yaml:10
+changed: [172.26.133.154] => {"changed": true, "checksum": "46bb397f7d971946e2d28d96582d98490b2bb312", "dest": "/home/ubuntu/docker/fe_server.tar", "gid": 1001, "group": "ubuntu", "md5sum": "845f9dcea6e59cddc02516a76da72571", "mode": "0664", "owner": "ubuntu", "size": 360935424, "src": "/home/ubuntu/.ansible/tmp/ansible-tmp-1684905044.96838-5430-178301744537991/source", "state": "file", "uid": 1000}
+
+TASK [docker-fe_server : Load Docker image from file] **************************
+task path: /home/junhual1/ccc/ass2/ansible/roles/docker-fe_server/tasks/main.yaml:16
+changed: [172.26.133.154] => {"changed": true, "cmd": ["sudo", "docker", "load", "--input", "/home/ubuntu/docker/fe_server.tar"], "delta": "0:00:10.518388", "end": "2023-05-24 05:11:15.509759", "msg": "", "rc": 0, "start": "2023-05-24 05:11:04.991371", "stderr": "", "stderr_lines": [], "stdout": "Loaded image: fe_server:latest", "stdout_lines": ["Loaded image: fe_server:latest"]}
+META: role_complete for 172.26.133.154
+META: ran handlers
+META: ran handlers
+
+PLAY RECAP *********************************************************************
+172.26.133.154             : ok=5    changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+

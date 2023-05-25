@@ -1,0 +1,22 @@
+---
+- name: Print current path from root
+  command: pwd -P
+
+- name: Create directory
+  file:
+    path: "{{ image_dir }}"
+    state: directory
+
+- name: Copy a server image
+  copy:
+    src:  "{{ src_dir }}"
+    dest: "{{ file_dir }}"
+    remote_src: false
+
+- name: Load Docker image from file
+  command: "sudo docker load --input {{file_dir}}"
+
+# - name: Run server Docker container
+#   # command: "sudo docker run --name bk_server1 -it -d -e script_name=app.py bk_server 0.0.0.0 5000"
+#   command: "sudo docker run --name bk_server1 -it -p 5000:5000 -e script_name=app.py -d bk_server 0.0.0.0 5000"
+

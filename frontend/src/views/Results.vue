@@ -600,7 +600,7 @@ export default {
             };
             const circle2 = new google.maps.Circle(circleOptions);
             circle2.addListener('mouseover', () => {
-                this.showInfoWindow1(circle2, tweet.city, tweet.count, tweet.total, tweet.percentage);
+                this.showInfoWindow5(circle2, tweet.city, tweet.count, tweet.total, tweet.percentage);
             });
             circle2.addListener('mouseout', () => {
                 this.hideInfoWindow();
@@ -639,7 +639,7 @@ export default {
             };
             const circle3 = new google.maps.Circle(circleOptions);
             circle3.addListener('mouseover', () => {
-                this.showInfoWindow1(circle3, tweet.city, tweet.count, tweet.total, tweet.percentage);
+                this.showInfoWindow6(circle3, tweet.city, tweet.count, tweet.total, tweet.percentage);
             });
             circle3.addListener('mouseout', () => {
                 this.hideInfoWindow();
@@ -683,6 +683,24 @@ export default {
       infoWindow2.setPosition(circle.getCenter());
       infoWindow2.open(this.map2);
       this.infoWindow = infoWindow2;
+    },
+    showInfoWindow5(circle, city, count, total, percentage) {
+      const infoWindow5 = new google.maps.InfoWindow({
+        content: `Name: ${city}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
+      });
+      infoWindow5.setPosition(circle.getCenter());
+      infoWindow5.open(this.map2);
+      this.infoWindow = infoWindow5;
+    },
+    showInfoWindow6(circle, city, count, total, percentage) {
+      const infoWindow6 = new google.maps.InfoWindow({
+        content: `Name: ${city}<br>Count: ${count}<br>Total: ${total}<br>Percentage: ${percentage.toFixed(3)}%`,
+        // disableAutoPan: true
+      });
+      infoWindow6.setPosition(circle.getCenter());
+      infoWindow6.open(this.map3);
+      this.infoWindow = infoWindow6;
     },
     hideInfoWindow() {
       if (this.infoWindow) {

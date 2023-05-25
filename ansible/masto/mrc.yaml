@@ -1,0 +1,32 @@
+- hosts: localhost
+  vars_files:
+    - host_vars/mrc.yaml
+  gather_facts: true
+
+  roles:
+    - role: openstack-common
+    - role: openstack-volume
+    - role: openstack-security-group
+    - role: openstack-instance
+
+
+- hosts: COMP90024
+  vars_files:
+    - host_vars/masto.yaml
+  gather_facts: true
+  
+  vars:
+  - ansible_user: ubuntu
+  - ansible_ssh_private_key_file: ~/ccc/ass2/ansible/masto/cloud.key    ## change the private key path
+  - ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
+
+  roles:
+    - role: docker-common
+    - role: docker-volumes
+    - role: docker-install
+    # - role: docker-mastodon
+    - role: docker-mastodon2
+
+
+
+
