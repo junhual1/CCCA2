@@ -1,0 +1,23 @@
+---
+- name: Print current path from root
+  command: pwd -P
+
+- name: Create directory
+  file:
+    path: "{{ image_dir }}"
+    state: directory
+
+- name: Copy a masto image
+  copy:
+    src:  "{{ src_dir }}"
+    dest: "{{ file_dir }}"
+    remote_src: false
+    
+- name: Run a command
+  command: ls -la
+
+- name: Load Docker image from file
+  command: "sudo docker load --input {{file_dir}}"
+
+- name: Run mastodown Docker container
+  command: "sudo docker run --name {{container_name2}} -d -e script_name=mastodon_base.py masto {{db_admin2}} {{db_pass2}} {{masto_token2}} {{masto_base_add2}} {{db_ips2}} {{db_name2}} {{db_port2}}"

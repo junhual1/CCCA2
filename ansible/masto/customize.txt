@@ -1,0 +1,13 @@
+mrc.yaml: 
+    cloud key path --> ansible_ssh_private_key_file
+
+host_vars/mrc.yaml & masto.yaml
+    ALL
+
+hosts:
+    customize the target server
+
+
+
+
+

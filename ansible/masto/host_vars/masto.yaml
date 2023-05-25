@@ -1,0 +1,30 @@
+---
+volumes:
+  - device: /dev/vdb
+    mountpoint: /var/lib/docker
+
+dk_dir: docker
+
+image_dir: /home/ubuntu/docker
+src_dir: /home/junhual1/ccc/ass2/ansible/masto/images/masto_base.tar  ## change this path to image path in ./images/masto.tar
+file_dir: /home/ubuntu/docker/masto_base.tar
+image_name: masto
+
+container_name1: masto1
+db_admin1: admin
+db_pass1: qazwsxedc
+masto_token1: 3pNPEKMUu8fkt6knKW_Mc0NKqdpKLoOKwa0hiWaZhWk
+masto_base_add1: https://mastodon.au/
+db_ips1: 172.26.132.54_172.26.133.32_172.26.130.9
+db_name1: mastodon
+db_port1: 5984
+
+
+container_name2: masto2
+db_admin2: admin
+db_pass2: qazwsxedc
+masto_token2: r3G8_aPRdoy3XBChDblWxLB78uRX8n-EVe_zdW2PnZs
+masto_base_add2: https://aus.social
+db_ips2: 172.26.132.54_172.26.133.32_172.26.130.9
+db_name2: mastodon_2
+db_port2: 5984
